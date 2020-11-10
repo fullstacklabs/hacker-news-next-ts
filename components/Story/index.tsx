@@ -1,47 +1,35 @@
 import React from "react"
-import styled from "styled-components"
 import { News } from "../../common/types"
-import {
-	Card,
-	CardBody,
-	CardButton,
-	CardContent,
-	CardTitle,
-	CarItem,
-	StoryMeta,
-	StoryMetaElement,
-} from "../../styles/StoryStyles"
+import { StoryTitle, StorySubText, UpVote } from "../../styles/StoryStyles"
 import { mapTime } from "../../common/util"
+import Link from "next/link"
 
 interface Props {
 	news: News
+	rank: number
 }
 
-const NewsUI: React.FC<Props> = ({ news }) => {
+const NewsUI: React.FC<Props> = ({ news, rank }) => {
 	return (
-		<CarItem>
-			<Card>
-				<CardContent>
-					<CardTitle>{news.title}</CardTitle>
-					<CardBody>
-						<StoryMeta>
-							<span>
-								<StoryMetaElement color="#000">By:</StoryMetaElement> {news.by}
-							</span>
-							<span>
-								<StoryMetaElement color="#000">Posted:</StoryMetaElement> {` `}
-								{mapTime(news.time)}
-							</span>
-							<span>
-								<StoryMetaElement color="#000">Score:</StoryMetaElement> {` `}
-								{news.score}
-							</span>
-						</StoryMeta>
-						<CardButton>Read More</CardButton>
-					</CardBody>
-				</CardContent>
-			</Card>
-		</CarItem>
+		<div>
+			<div style={{ display: "inline-block" }}>
+				<StoryTitle>{`${rank + 1}.`}</StoryTitle>
+				<StoryTitle>
+					<UpVote src="/grayarrow.gif" alt="Upvote" />
+				</StoryTitle>
+				<StoryTitle>
+					<Link href={news.url}>
+						<a>{news.title}</a>
+					</Link>
+				</StoryTitle>
+			</div>
+			<div>
+				<StorySubText>{`${news.score} Points |`}</StorySubText>
+				<StorySubText>{`By: ${news.by}| `}</StorySubText>
+				<StorySubText>{` ${mapTime(news.time)} | `}</StorySubText>
+				<StorySubText>{` ${news.descendants} comments `}</StorySubText>
+			</div>
+		</div>
 	)
 }
 
