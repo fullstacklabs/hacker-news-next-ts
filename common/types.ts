@@ -14,12 +14,14 @@ export interface InitialState {
 	hasMore: boolean
 	news: News[]
 	comments: Comment[]
+	newsPage: News | null
 }
 
 export interface MyAssociatedActions {
 	getNewStories: () => Promise<void>
 	getMoreNews: () => Promise<void>
 	getCommentsById: (id: number[]) => Promise<void>
+	getNewsById: (id: number) => Promise<void>
 }
 
 export interface News {

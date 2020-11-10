@@ -29,12 +29,17 @@ const getcommentsData = async (ids: number[]): Promise<Comment[]> => {
 	return comments
 }
 
+const fetchNewStories = async () => {
+	const result = await fetch(newStoriesUrl)
+	const jsonData = (await result.json()) as number[]
+	return jsonData
+}
+
 const getNewStories = async (
 	store: Store<InitialState, MyAssociatedActions>
 ) => {
 	try {
-		const result = await fetch(newStoriesUrl)
-		const jsonData = (await result.json()) as number[]
+		const jsonData = await fetchNewStories()
 		const getNewsDetail: News[] = await getDataDetail(
 			jsonData.slice(0, displayNumber)
 		)
@@ -104,8 +109,24 @@ const getCommentsById = async (
 	}
 }
 
+const getNewsById = async(
+	store: Store<InitialState, MyAssociatedActions>,
+	id: number) => {
+		try {
+			const newsItem: News[] = await getDataDetail([id])
+			store.setState({
+				...store.state,
+				newsPage: newsItem[0]
+			})
+		} catch (e) {
+			store.setState({ ...store.state, error: e.message as string })
+		}
+	}
+
 export const actions = {
+	fetchNewStories,
 	getNewStories,
 	getMoreNews,
 	getCommentsById,
+	getNewsById
 }
