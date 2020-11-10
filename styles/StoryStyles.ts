@@ -2,12 +2,13 @@ import styled from "styled-components"
 
 export const CarItem = styled.div`
 	display: block;
-	padding: 1rem;
+	padding: 0.5rem;
+	margin: auto;
 	@media (min-width: 40rem) {
 		width: 50%;
 	}
 	@media (min-width: 56rem) {
-		width: 33.3333%;
+		width: 90%;
 	}
 `
 export const Card = styled.div`
@@ -20,7 +21,7 @@ export const Card = styled.div`
 `
 
 export const CardContent = styled.div`
-	padding: 1rem;
+	padding: 0.5rem;
 `
 export const CardTitle = styled.div`
 	color: #666;
@@ -46,7 +47,9 @@ export const CardButton = styled.button`
 	border-radius: 4px;
 	font-weight: 400;
 	display: block;
-	width: 100%;
+	width: 40%;
+	margin: auto;
+	margin-top: 10px;
 	cursor: pointer;
 	border: 1px solid #ccc;
 	background: transparent;

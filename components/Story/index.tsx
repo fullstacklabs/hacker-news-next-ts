@@ -11,10 +11,12 @@ import {
 	StoryMeta,
 	StoryMetaElement,
 } from "../../styles/StoryStyles"
+import { mapTime } from "../../common/util"
 
 interface Props {
 	news: News
 }
+
 const NewsUI: React.FC<Props> = ({ news }) => {
 	return (
 		<CarItem>
@@ -28,7 +30,11 @@ const NewsUI: React.FC<Props> = ({ news }) => {
 							</span>
 							<span>
 								<StoryMetaElement color="#000">Posted:</StoryMetaElement> {` `}
-								{news.time}
+								{mapTime(news.time)}
+							</span>
+							<span>
+								<StoryMetaElement color="#000">Score:</StoryMetaElement> {` `}
+								{news.score}
 							</span>
 						</StoryMeta>
 						<CardButton>Read More</CardButton>
