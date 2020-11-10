@@ -9,6 +9,7 @@ const initialState: InitialState = {
 	currNews: [],
 	error: "",
 	countDisplay: { prev: 0, next: displayNumber },
+	countKidsDisplay: { prev: 0, next: displayNumber },
 	hasMore: true,
 	news: [],
 	comments: [],

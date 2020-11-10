@@ -88,7 +88,13 @@ const getCommentsById = async (
 	ids: number[]
 ) => {
 	try {
-		const comments: Comment[] = await getcommentsData(ids)
+		const comments: Comment[] = await getcommentsData(
+			ids.slice(
+				store.state.countKidsDisplay.prev,
+				store.state.countKidsDisplay.next
+			)
+		)
+		//console.log(comments)
 		store.setState({
 			...store.state,
 			comments: comments,

@@ -13,6 +13,7 @@ const initialProps: InitialState = {
 	currNews: [],
 	error: "",
 	countDisplay: { prev: 0, next: 30 },
+	countKidsDisplay: { prev: 0, next: 30 },
 	hasMore: true,
 	news: [],
 	comments: [],

@@ -10,6 +10,7 @@ export interface InitialState {
 	currNews: number[]
 	error: string
 	countDisplay: CountDisplay
+	countKidsDisplay: CountDisplay
 	hasMore: boolean
 	news: News[]
 	comments: Comment[]

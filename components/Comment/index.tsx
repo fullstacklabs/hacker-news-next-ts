@@ -1,11 +1,11 @@
 import styled from "styled-components"
 import { mapTime } from "../../common/util"
 import { Comment as CommentType } from "../../common/types"
+import { render } from "enzyme"
+import { useState } from "react"
 
 interface CommentTypeComponent
 	extends Omit<CommentType, "deleted" | "id" | "parent" | "type"> {
-	expandToggleClick: () => void
-	isExpanded: boolean
 	descendants: number
 }
 
@@ -43,10 +43,14 @@ const Comment: React.FC<CommentTypeComponent> = ({
 	by,
 	time,
 	text,
-	expandToggleClick,
-	isExpanded,
 	descendants,
 }) => {
+	const [isExpanded, setIsExpanded] = useState(true)
+	const expandToggleClick = () => {
+		console.log(isExpanded)
+		setIsExpanded(!isExpanded)
+	}
+
 	const toggleButton = (
 		<ToggleButton onClick={expandToggleClick}>
 			[{isExpanded ? "-" : descendants}]
@@ -58,6 +62,7 @@ const Comment: React.FC<CommentTypeComponent> = ({
 			{by} {mapTime(time)}&nbsp;{toggleButton}
 		</>
 	)
+	console.log(isExpanded)
 
 	if (!isExpanded)
 		return (

@@ -27,7 +27,9 @@ const NewsUI: React.FC<Props> = ({ news, rank }) => {
 				<StorySubText>{`${news.score} Points |`}</StorySubText>
 				<StorySubText>{`By: ${news.by}| `}</StorySubText>
 				<StorySubText>{` ${mapTime(news.time)} | `}</StorySubText>
-				<StorySubText>{` ${news.descendants} comments `}</StorySubText>
+				<StorySubText>{` ${news.descendants} comments ${
+					news.kids && news.kids.length
+				}`}</StorySubText>
 			</div>
 		</div>
 	)
