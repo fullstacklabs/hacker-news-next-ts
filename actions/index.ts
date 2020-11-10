@@ -1,0 +1,105 @@
+import { Store } from "use-global-hook"
+import {
+	Comment,
+	InitialState,
+	MyAssociatedActions,
+	News,
+} from "../common/types"
+import { baseUrl, displayNumber, newStoriesUrl } from "../common/constants"
+
+const getDataDetail = async (ids: number[]): Promise<News[]> => {
+	const addingNews: News[] = await Promise.all(
+		ids.slice(0, displayNumber).map(async (newsId) => {
+			const res = await fetch(`${baseUrl}/item/${newsId}.json?print=pretty`)
+			const resJson = await res.json()
+			return resJson
+		})
+	)
+	return addingNews
+}
+
+const getcommentsData = async (ids: number[]): Promise<Comment[]> => {
+	const comments: Comment[] = await Promise.all(
+		ids.slice(0, displayNumber).map(async (newsId) => {
+			const res = await fetch(`${baseUrl}/item/${newsId}.json?print=pretty`)
+			const resJson = await res.json()
+			return resJson
+		})
+	)
+	return comments
+}
+
+const getNewStories = async (
+	store: Store<InitialState, MyAssociatedActions>
+) => {
+	try {
+		const result = await fetch(newStoriesUrl)
+		const jsonData = (await result.json()) as number[]
+		const getNewsDetail: News[] = await getDataDetail(
+			jsonData.slice(0, displayNumber)
+		)
+
+		store.setState({
+			...store.state,
+			currNews: jsonData.slice(0, displayNumber),
+			totalNews: jsonData,
+			news: [...store.state.news, ...getNewsDetail],
+		})
+	} catch (e) {
+		store.setState({ ...store.state, error: e.message as string })
+	}
+}
+/**
+ * Internal Process to display news in chunck `${displayNumber}`
+ *
+ */
+const getMoreNews = async (store: Store<InitialState, MyAssociatedActions>) => {
+	const { countDisplay, hasMore, currNews, totalNews } = store.state
+	if (currNews.length === totalNews.length) {
+		store.setState({ ...store.state, hasMore: false })
+		return
+	}
+
+	const getNewsDetail: News[] = await getDataDetail(
+		totalNews.slice(
+			countDisplay.prev + displayNumber,
+			countDisplay.next + displayNumber
+		)
+	)
+	const newsList = currNews.concat(
+		totalNews.slice(
+			countDisplay.prev + displayNumber,
+			countDisplay.next + displayNumber
+		)
+	)
+	store.setState({
+		...store.state,
+		currNews: newsList,
+		countDisplay: {
+			prev: store.state.countDisplay.prev + displayNumber,
+			next: store.state.countDisplay.next + displayNumber,
+		},
+		news: [...store.state.news, ...getNewsDetail],
+	})
+}
+
+const getCommentsById = async (
+	store: Store<InitialState, MyAssociatedActions>,
+	ids: number[]
+) => {
+	try {
+		const comments: Comment[] = await getcommentsData(ids)
+		store.setState({
+			...store.state,
+			comments: comments,
+		})
+	} catch (e) {
+		store.setState({ ...store.state, error: e.message as string })
+	}
+}
+
+export const actions = {
+	getNewStories,
+	getMoreNews,
+	getCommentsById,
+}
