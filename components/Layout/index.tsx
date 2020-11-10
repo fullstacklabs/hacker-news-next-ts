@@ -6,6 +6,10 @@ const Wrapper = styled.div`
 	width: 85%;
 	margin: 0 auto;
 	background: #f6f6ef;
+
+	@media only screen and (max-width: 750px) {
+		width: auto;
+	}
 `
 
 interface ChildrenProp {
