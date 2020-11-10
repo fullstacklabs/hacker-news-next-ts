@@ -1,5 +1,5 @@
 import styled from "styled-components"
-
+import { mapTime } from "../../common/util"
 import { Comment as CommentType } from "../../common/types"
 
 interface CommentTypeComponent
@@ -55,7 +55,7 @@ const Comment: React.FC<CommentTypeComponent> = ({
 
 	const header = (
 		<>
-			{by} {time}&nbsp;{toggleButton}
+			{by} {mapTime(time)}&nbsp;{toggleButton}
 		</>
 	)
 
