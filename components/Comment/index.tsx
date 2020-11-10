@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import UpVote from "../UpVote"
 import { mapTime } from "../../common/util"
 import { Comment as CommentType } from "../../common/types"
 
@@ -19,15 +20,6 @@ const Header = styled.div<{ collapsed?: boolean }>`
 	font-size: 0.85rem;
 	color: #828282;
 	margin-left: ${(props) => props.collapsed && "14px"};
-`
-
-const UpVote = styled.img`
-	display: block;
-	width: 10px;
-	height: 10px;
-	border: 0px;
-	margin: 3px 2px 6px;
-	cursor: pointer;
 `
 
 const Body = styled.div`
@@ -69,7 +61,7 @@ const Comment: React.FC<CommentTypeComponent> = ({
 	return (
 		<StyledComment>
 			<Header>
-				<UpVote src="/grayarrow.gif" alt="Upvote" />
+				<UpVote />
 				{header}
 			</Header>
 			<Body dangerouslySetInnerHTML={{ __html: text }} />
