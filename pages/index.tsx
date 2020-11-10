@@ -20,11 +20,12 @@ const Home: React.FC<Props> = () => {
 				next={actions.getMoreNews}
 				hasMore={state.hasMore}
 				loader={<h4>Loading...</h4>}
-				style={{ textAlign: "center" }}
 			>
-				<div style={{ textAlign: "center" }}>
+				<div>
 					{state.news &&
-						state.news.map((item, index) => <Story key={index} news={item} />)}
+						state.news.map((item, index) => (
+							<Story key={index} news={item} rank={index} />
+						))}
 				</div>
 			</InfiniteScroll>
 		</div>

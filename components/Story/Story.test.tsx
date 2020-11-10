@@ -24,7 +24,7 @@ describe("<Index />", () => {
 	let wrapper: ShallowWrapper<any, Readonly<{}>, React.Component<{}, {}, any>>
 
 	beforeEach(() => {
-		wrapper = shallow(<Index news={initialProps} />)
+		wrapper = shallow(<Index news={initialProps} rank={1} />)
 	})
 
 	it("renders without crashing", () => {
