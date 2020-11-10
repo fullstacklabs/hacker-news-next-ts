@@ -14,17 +14,19 @@ const Home: React.FC<Props> = () => {
 	}, [])
 
 	return (
-		<InfiniteScroll
-			dataLength={state.news.length}
-			next={actions.getMoreNews}
-			hasMore={state.hasMore}
-			loader={<h4>Loading...</h4>}
-		>
-			<div>
-				{state.news &&
-					state.news.map((item, index) => <Story key={index} news={item} />)}
-			</div>
-		</InfiniteScroll>
+		<div style={{ textAlign: "center" }}>
+			<InfiniteScroll
+				dataLength={state.news.length}
+				next={actions.getMoreNews}
+				hasMore={state.hasMore}
+				loader={<h4>Loading...</h4>}
+			>
+				<div>
+					{state.news &&
+						state.news.map((item, index) => <Story key={index} news={item} />)}
+				</div>
+			</InfiniteScroll>
+		</div>
 	)
 }
 

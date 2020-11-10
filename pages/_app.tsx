@@ -1,9 +1,9 @@
 import { AppProps } from "next/app"
 import { createGlobalStyle, ThemeProvider } from "styled-components"
+import Layout from "../components/Layout"
 
 const GlobalStyle = createGlobalStyle`
   body {
-    margin: 0;
     padding: 0;
 		box-sizing: border-box;
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -22,7 +22,9 @@ export default function App({ Component, pageProps }: AppProps) {
 		<>
 			<GlobalStyle />
 			<ThemeProvider theme={theme}>
-				<Component {...pageProps} />
+				<Layout>
+					<Component {...pageProps} />
+				</Layout>
 			</ThemeProvider>
 		</>
 	)
