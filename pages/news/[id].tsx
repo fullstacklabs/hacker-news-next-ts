@@ -20,12 +20,6 @@ const News: React.FC<Props> = ({ id }) => {
 		actions.getNewsById(id)
 	}, [])
 
-	useEffect(() => {
-		if (state.newsPage) {
-			actions.getCommentsById(state.newsPage.kids)
-		}
-	}, [state.newsPage])
-
 	if (state.error) return <StyledNews>{state.error}</StyledNews>
 
 	if (!state.newsPage) return <StyledNews>Loading...</StyledNews>
