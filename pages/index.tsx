@@ -24,7 +24,7 @@ const Home: React.FC<Props> = () => {
 				<div>
 					{state.news &&
 						state.news.map((item, index) => (
-							<Story key={index} news={item} rank={index} />
+							<Story key={index} news={item} rank={index + 1} />
 						))}
 				</div>
 			</InfiniteScroll>

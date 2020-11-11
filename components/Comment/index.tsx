@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import UpVote from "../UpVote"
 import { mapTime } from "../../common/util"
 import { Comment as CommentType } from "../../common/types"
 import { render } from "enzyme"
@@ -22,15 +23,6 @@ const Header = styled.div<{ collapsed?: boolean }>`
 	margin-left: ${(props) => props.collapsed && "14px"};
 `
 
-const UpVote = styled.img`
-	display: block;
-	width: 10px;
-	height: 10px;
-	border: 0px;
-	margin: 3px 2px 6px;
-	cursor: pointer;
-`
-
 const Body = styled.div`
 	margin: 5px 0 5px 14px;
 	font-size: 0.8rem;
@@ -40,15 +32,11 @@ const ToggleButton = styled.span`
 	cursor: pointer;
 `
 
-const CommentUI: FunctionComponent<CommentTypeComponent> = ({
-	id,
-	comment,
-}) => {
+const Comment: FunctionComponent<CommentTypeComponent> = ({ id, comment }) => {
 	const [isExpanded, setIsExpanded] = useState(true)
 	const [_comment, setComment] = useState(comment)
 
 	const expandToggleClick = () => {
-		console.log(isExpanded)
 		setIsExpanded(!isExpanded)
 	}
 
@@ -82,11 +70,11 @@ const CommentUI: FunctionComponent<CommentTypeComponent> = ({
 		_comment.kids &&
 		_comment.kids
 			.slice(0, 3)
-			.map((comment) => <CommentUI key={comment} id={comment} />)
+			.map((comment) => <Comment key={comment} id={comment} />)
 	return (
 		<StyledComment>
 			<Header>
-				<UpVote src="/grayarrow.gif" alt="Upvote" />
+				<UpVote />
 				{header}
 			</Header>
 			<Body dangerouslySetInnerHTML={{ __html: _comment?.text || "" }} />
@@ -97,4 +85,4 @@ const CommentUI: FunctionComponent<CommentTypeComponent> = ({
 	)
 }
 
-export default CommentUI
+export default Comment

@@ -2,15 +2,15 @@ import React from "react"
 import { configure, shallow, ShallowWrapper } from "enzyme"
 import Adapter from "enzyme-adapter-react-16"
 
-import Comment from "."
+import Comments from "."
 
 configure({ adapter: new Adapter() })
 
-describe("<Comment />", () => {
+describe("<Comments />", () => {
 	let wrapper: ShallowWrapper
 
 	beforeEach(() => {
-		wrapper = shallow(<Comment id={5} />)
+		wrapper = shallow(<Comments kids={[1, 2, 3]} />)
 	})
 
 	it("renders without crashing", () => {

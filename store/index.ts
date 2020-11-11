@@ -13,6 +13,7 @@ const initialState: InitialState = {
 	hasMore: true,
 	news: [],
 	comments: [],
+	newsPage: null,
 }
 
 export const useGlobal = globalHook<InitialState, MyAssociatedActions>(
