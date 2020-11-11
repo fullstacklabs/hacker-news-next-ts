@@ -1,0 +1,39 @@
+{
+	"news": [
+		{
+			"id": 1,
+			"title": "Fake API Server",
+			"url": "https://www.npmjs.com/package/json-server",
+			"by": "user",
+			"creationDate": "2020-11-11T21:02:02.451Z",
+			"likes": [{ "userId": 1 }],
+			"text": "With this you can have a Fake API server in no time",
+			"type": "story",
+			"kids": [{ "commentId": 2 }],
+			"parent": null
+		},
+		{
+			"id": 2,
+			"title": "this comment",
+			"url": null,
+			"by": "user",
+			"creationDate": "2020-11-11T22:02:02.451Z",
+			"likes": [{ "userId": 1 }],
+			"text": "this is a comment",
+			"type": "comment",
+			"kids": [],
+			"parent": null
+		}
+	],
+	"user": [
+		{
+			"id": 1,
+			"name": "testing",
+			"email": "test@emial.com",
+			"password": "1234",
+			"creationdate": "2020-11-11T21:02:02.451Z",
+			"title": "Mr Test",
+			"phone": "123456"
+		}
+	]
+}
