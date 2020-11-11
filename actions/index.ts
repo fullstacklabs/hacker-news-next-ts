@@ -18,7 +18,7 @@ const getDataDetail = async (ids: number[]): Promise<News[]> => {
 	return addingNews
 }
 
-const getcommentsData = async (ids: number[]): Promise<Comment[]> => {
+/* const getcommentsData = async (ids: number[]): Promise<Comment[]> => {
 	const comments: Comment[] = await Promise.all(
 		ids.slice(0, displayNumber).map(async (newsId) => {
 			const res = await fetch(`${baseUrl}/item/${newsId}.json?print=pretty`)
@@ -27,7 +27,7 @@ const getcommentsData = async (ids: number[]): Promise<Comment[]> => {
 		})
 	)
 	return comments
-}
+} */
 
 const fetchNewStories = async () => {
 	const result = await fetch(newStoriesUrl)
@@ -88,7 +88,7 @@ const getMoreNews = async (store: Store<InitialState, MyAssociatedActions>) => {
 	})
 }
 
-const getCommentsById = async (
+/* const getCommentsById = async (
 	store: Store<InitialState, MyAssociatedActions>,
 	ids: number[]
 ) => {
@@ -110,7 +110,7 @@ const getCommentsById = async (
 	} catch (e) {
 		store.setState({ ...store.state, error: e.message as string })
 	}
-}
+} */
 
 const getNewsById = async(
 	store: Store<InitialState, MyAssociatedActions>,
@@ -130,6 +130,5 @@ export const actions = {
 	fetchNewStories,
 	getNewStories,
 	getMoreNews,
-	getCommentsById,
 	getNewsById
 }

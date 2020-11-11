@@ -20,7 +20,7 @@ export interface InitialState {
 export interface MyAssociatedActions {
 	getNewStories: () => Promise<void>
 	getMoreNews: () => Promise<void>
-	getCommentsById: (id: number[]) => Promise<void>
+	// getCommentsById: (id: number[]) => Promise<void>
 	getNewsById: (id: number) => Promise<void>
 }
 
