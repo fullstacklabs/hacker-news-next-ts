@@ -70,12 +70,12 @@ const Story: React.FC<Props> = ({ news, rank }) => {
 	return (
 		<StyledNews>
 			<Header>
-				{rank && <Title> {rank}.</Title>}
+				{rank && <Title>{rank}.</Title>}
 				<UpVote />
 				<Title>{titleLink}</Title>
 				{url && (
 					<Domain>
-						<a href={url}>{hostname}</a>
+						(<a href={url}>{hostname}</a>)
 					</Domain>
 				)}
 			</Header>
