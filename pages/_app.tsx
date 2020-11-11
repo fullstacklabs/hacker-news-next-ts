@@ -12,6 +12,10 @@ const GlobalStyle = createGlobalStyle`
 	a:link {
     color: #000000;
 	}
+
+	*, *:before, *:after {
+		box-sizing: border-box;
+	}
 `
 
 const theme = {
