@@ -2,7 +2,7 @@ import styled from "styled-components"
 import NavigationItem from "../NavigationItem"
 
 const StyledFooter = styled.footer`
-	border-top: 2px solid #ff6600;
+	border-top: 2px solid ${({ theme }) => theme.colors.primary};
 	padding: 15px;
 	text-align: center;
 

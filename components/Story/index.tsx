@@ -1,6 +1,5 @@
 import React from "react"
 import { News } from "../../common/types"
-import { StoryTitle, StorySubText } from "../../styles/StoryStyles"
 import { mapTime } from "../../common/util"
 import Link from "next/link"
 import styled from "styled-components"
@@ -24,9 +23,9 @@ const Title = styled.h1`
 	margin: 0 5px;
 	font-size: 0.9rem;
 	font-weight: normal;
-	color: #828282;
+	color: ${({ theme }) => theme.colors.secondary};
 	a:visited {
-		color: #828282;
+		color: ${({ theme }) => theme.colors.secondary};
 	}
 `
 
@@ -35,7 +34,7 @@ const Domain = styled.div`
 
 	&,
 	a {
-		color: #828282;
+		color: ${({ theme }) => theme.colors.secondary};
 	}
 
 	a:hover {
@@ -48,16 +47,17 @@ const Details = styled.div`
 	align-items: baseline;
 	margin: 5px 0 5px 19px;
 	font-size: 0.7rem;
-	color: #828282;
+	color: ${({ theme }) => theme.colors.secondary};
 	a:link,
 	a:visited {
-		color: #828282;
+		color: ${({ theme }) => theme.colors.secondary};
 	}
 `
 
 const Story: React.FC<Props> = ({ news, rank }) => {
 	const { title, url, by, time, score, descendants, id } = news
 	const parsedDomain = new URL(url)
+
 	return (
 		<StyledNews>
 			<Header>
@@ -74,50 +74,15 @@ const Story: React.FC<Props> = ({ news, rank }) => {
 			</Header>
 			<Details>
 				<Link href={`/news/${id}`}>
-					<a>{score} &nbsp;</a>
-				</Link>{" "}
-				points| by {by} &nbsp;|&nbsp; {mapTime(time)}&nbsp;|&nbsp;
-				<Link href={`/news/${id}`}>
-					<a>
-						{""}
-						{descendants}
-					</a>
+					<a>{score} points</a>
 				</Link>
-				&nbsp; comments
+				&nbsp;| by {by} | {mapTime(time)} |&nbsp;
+				<Link href={`/news/${id}`}>
+					<a>{descendants} comments</a>
+				</Link>
 			</Details>
 		</StyledNews>
-
-		// <div>
-		// 	<div style={{ display: "inline-block" }}>
-		// 		<StoryTitle>{`${rank + 1}.`}</StoryTitle>
-		// 		<StoryTitle>
-		// 			<UpVote src="/grayarrow.gif" alt="Upvote" />
-		// 		</StoryTitle>
-		// 		<StoryTitle>
-		// 			<Link href={news.url}>
-		// 				<a>{news.title}</a>
-		// 			</Link>
-		// 		</StoryTitle>
-		// 	</div>
-		// 	<div>
-		// 		<StorySubText>
-		// 			<Link href={`/news/${news.id}`}>
-		// 				<a>{news.score} </a>
-		// 			</Link>
-		// 			Points |
-		// 		</StorySubText>
-		// 		<StorySubText>{`By: ${news.by}| `}</StorySubText>
-		// 		<StorySubText>{` ${mapTime(news.time)} | `}</StorySubText>
-		// 		<StorySubText>
-		// 			{" "}
-		// 			<Link href={`/news/${news.id}`}>
-		// 				<a>{news.descendants} </a>
-		// 			</Link>
-		// 			{` comments ${news.kids && news.kids.length}`}
-		// 		</StorySubText>
-		// 	</div>
-		// </div>
 	)
 }
 
-export default Story
+export default React.memo(Story)

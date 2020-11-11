@@ -1,8 +1,8 @@
+import React from "react"
 import styled from "styled-components"
 import UpVote from "../UpVote"
 import { mapTime } from "../../common/util"
 import { Comment as CommentType } from "../../common/types"
-import { render } from "enzyme"
 import { FunctionComponent, useEffect, useState } from "react"
 import { baseUrl } from "../../common/constants"
 
@@ -15,12 +15,11 @@ const StyledComment = styled.div`
 	padding: 10px;
 `
 
-const Header = styled.div<{ collapsed?: boolean }>`
+const Header = styled.div`
 	display: flex;
 	align-items: center;
 	font-size: 0.85rem;
-	color: #828282;
-	margin-left: ${(props) => props.collapsed && "14px"};
+	color: ${({ theme }) => theme.colors.secondary};
 `
 
 const Body = styled.div`
@@ -58,13 +57,6 @@ const Comment: FunctionComponent<CommentTypeComponent> = ({ id, comment }) => {
 		</>
 	)
 
-	if (!isExpanded)
-		return (
-			<StyledComment>
-				<Header collapsed>{header}</Header>
-			</StyledComment>
-		)
-
 	const nestedComments =
 		_comment &&
 		_comment.kids &&
@@ -77,12 +69,12 @@ const Comment: FunctionComponent<CommentTypeComponent> = ({ id, comment }) => {
 				<UpVote />
 				{header}
 			</Header>
-			<Body dangerouslySetInnerHTML={{ __html: _comment?.text || "" }} />
 			<div style={{ display: !isExpanded ? "none" : "block" }}>
+				<Body dangerouslySetInnerHTML={{ __html: _comment?.text || "" }} />
 				{nestedComments}
 			</div>
 		</StyledComment>
 	)
 }
 
-export default Comment
+export default React.memo(Comment)

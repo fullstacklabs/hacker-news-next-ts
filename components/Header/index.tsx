@@ -7,7 +7,7 @@ const HeaderDiv = styled.div`
 	display: flex;
 	align-items: center;
 	padding: 2px;
-	background: #ff6600;
+	background: ${({ theme }) => theme.colors.primary}; ;
 `
 
 const Logo = styled.img`
