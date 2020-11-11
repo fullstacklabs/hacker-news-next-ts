@@ -1,9 +1,7 @@
 import React, { useEffect } from "react"
 import styled from "styled-components"
-import UpVote from "../../components/UpVote"
 import { useGlobal } from "../../store"
 import { actions } from "../../actions"
-import { mapTime } from "../../common/util"
 import Comments from "../../components/Comments"
 import Story from "../../components/Story"
 
@@ -13,38 +11,6 @@ interface Props {
 
 const StyledNews = styled.div`
 	padding: 10px;
-`
-
-const Header = styled.div`
-	display: flex;
-	align-items: baseline;
-`
-
-const Title = styled.h1`
-	margin: 0 5px;
-	font-size: 0.9rem;
-	font-weight: normal;
-`
-
-const Domain = styled.div`
-	font-size: 0.7rem;
-
-	&,
-	a {
-		color: #828282;
-	}
-
-	a:hover {
-		text-decoration: underline;
-	}
-`
-
-const Details = styled.div`
-	display: flex;
-	align-items: baseline;
-	margin: 5px 0 5px 19px;
-	font-size: 0.7rem;
-	color: #828282;
 `
 
 const News: React.FC<Props> = ({ id }) => {
@@ -64,26 +30,11 @@ const News: React.FC<Props> = ({ id }) => {
 
 	if (!state.newsPage) return <StyledNews>Loading...</StyledNews>
 
-	const { by, kids, score, time, title, url, descendants } = state.newsPage
-
-	const parsedDomain = new URL(url)
+	const { kids } = state.newsPage
 
 	return (
 		<React.Fragment>
-			{/* <StyledNews>
-				<Header>
-					<UpVote />
-					<Title>{title}</Title>
-					<Domain>
-						(<a href={url}>{parsedDomain.hostname}</a>)
-					</Domain>
-				</Header>
-				<Details>
-					{score} points by {by} {mapTime(time)} {descendants} comments
-				</Details>
-			</StyledNews> */}
 			<Story news={state.newsPage} />
-
 			<Comments kids={kids} />
 		</React.Fragment>
 	)

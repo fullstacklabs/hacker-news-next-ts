@@ -102,7 +102,10 @@ const getCommentsById = async (
 		//console.log(comments)
 		store.setState({
 			...store.state,
-			comments: comments,
+			comments: [
+				...store.state.comments,
+				...comments
+			],
 		})
 	} catch (e) {
 		store.setState({ ...store.state, error: e.message as string })

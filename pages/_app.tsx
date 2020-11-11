@@ -8,16 +8,16 @@ const GlobalStyle = createGlobalStyle`
 		box-sizing: border-box;
 		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	}
+	
 	a:link {
     color: #000000;
-    text-decoration: none;
-}
+	}
 `
 
 const theme = {
 	colors: {
-		primary: "#0070f3",
-		secondary: "#333333",
+		primary: "#ff6600",
+		secondary: "#828282",
 	},
 }
 
