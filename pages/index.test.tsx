@@ -17,6 +17,7 @@ const initialProps: InitialState = {
 	hasMore: true,
 	news: [],
 	comments: [],
+	newsPage: null,
 }
 describe("<Index />", () => {
 	let wrapper: ShallowWrapper<any, Readonly<{}>, React.Component<{}, {}, any>>

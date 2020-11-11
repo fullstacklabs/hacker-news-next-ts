@@ -4,6 +4,8 @@ import UpVote from "../../components/UpVote"
 import { useGlobal } from "../../store"
 import { actions } from "../../actions"
 import { mapTime } from "../../common/util"
+import Comments from "../../components/Comments"
+import Story from "../../components/Story"
 
 interface Props {
 	id: number
@@ -67,18 +69,23 @@ const News: React.FC<Props> = ({ id }) => {
 	const parsedDomain = new URL(url)
 
 	return (
-		<StyledNews>
-			<Header>
-				<UpVote />
-				<Title>{title}</Title>
-				<Domain>
-					(<a href={url}>{parsedDomain.hostname}</a>)
-				</Domain>
-			</Header>
-			<Details>
-				{score} points by {by} {mapTime(time)} {descendants} comments
-			</Details>
-		</StyledNews>
+		<React.Fragment>
+			{/* <StyledNews>
+				<Header>
+					<UpVote />
+					<Title>{title}</Title>
+					<Domain>
+						(<a href={url}>{parsedDomain.hostname}</a>)
+					</Domain>
+				</Header>
+				<Details>
+					{score} points by {by} {mapTime(time)} {descendants} comments
+				</Details>
+			</StyledNews> */}
+			<Story news={state.newsPage} />
+
+			<Comments kids={kids} />
+		</React.Fragment>
 	)
 }
 
