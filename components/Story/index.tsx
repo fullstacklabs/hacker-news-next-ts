@@ -56,21 +56,28 @@ const Details = styled.div`
 
 const Story: React.FC<Props> = ({ news, rank }) => {
 	const { title, url, by, time, score, descendants, id } = news
-	const parsedDomain = new URL(url)
+
+	let titleLink: React.ReactNode = title
+	let hostname = ""
+
+	if (url) {
+		const parsedDomain = new URL(url)
+		hostname = parsedDomain.hostname
+
+		titleLink = <a href={url}>{title}</a>
+	}
 
 	return (
 		<StyledNews>
 			<Header>
 				{rank && <Title> {rank}.</Title>}
 				<UpVote />
-				<Title>
-					<Link href={url}>
-						<a>{title}</a>
-					</Link>
-				</Title>
-				<Domain>
-					(<a href={url}>{parsedDomain.hostname}</a>)
-				</Domain>
+				<Title>{titleLink}</Title>
+				{url && (
+					<Domain>
+						<a href={url}>{hostname}</a>
+					</Domain>
+				)}
 			</Header>
 			<Details>
 				<Link href={`/news/${id}`}>
