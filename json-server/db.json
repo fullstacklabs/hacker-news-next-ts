@@ -21,6 +21,33 @@
       "parent": null
     },
     {
+<<<<<<< HEAD
+      "kids": [],
+      "creationDate": "2020-11-12T17:58:23.443Z",
+      "text": "THIS IS A LINK TO THE DOC",
+      "url": "https://nextjs.org/docs/api-reference/next.config.js/react-strict-mode",
+      "title": "NEXT DOCUMENTARION",
+      "by": "testing",
+      "id": 2
+    },
+    {
+      "kids": [],
+      "creationDate": "2020-11-12T17:59:37.043Z",
+      "text": "sending data to server",
+      "url": "https://nextjs.org/docs/api-reference/next.config.js/react-strict-mode",
+      "title": "next KS",
+      "by": "testing",
+      "id": 3
+    },
+    {
+      "kids": [],
+      "creationDate": "2020-11-12T18:07:44.177Z",
+      "text": "asdasd",
+      "url": "asdasd",
+      "title": "asdasd",
+      "by": "testing",
+      "id": 4
+=======
       "id": 2,
       "title": "this comment",
       "url": null,
@@ -35,6 +62,7 @@
       "type": "comment",
       "kids": [],
       "parent": null
+>>>>>>> master
     }
   ],
   "user": [
@@ -46,6 +74,8 @@
       "creationdate": "2020-11-11T21:02:02.451Z",
       "title": "Mr Test",
       "phone": "123456"
+<<<<<<< HEAD
+=======
     },
     {
       "name": "Test",
@@ -54,6 +84,7 @@
       "password": "testtest",
       "passwordConfirm": "testtest",
       "id": 2
+>>>>>>> master
     }
   ]
 }
