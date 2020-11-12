@@ -20,7 +20,7 @@ const Navigation: React.FC = () => {
 		actions.logout()
 	}, [])
 
-	const isAuthenticated = !!state.userId
+	const isAuthenticated = !!state.user
 
 	return (
 		<Nav>

@@ -14,7 +14,7 @@ const initialState: InitialState = {
 	news: [],
 	comments: [],
 	newsPage: null,
-	userId: null,
+	user: null,
 	userLoading: false,
 	userError: null,
 }

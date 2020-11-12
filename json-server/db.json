@@ -78,11 +78,10 @@
 =======
     },
     {
-      "name": "Test",
+      "name": "Tests",
       "title": "Mr.",
       "email": "test@test.com",
       "password": "testtest",
-      "passwordConfirm": "testtest",
       "id": 2
 >>>>>>> master
     }

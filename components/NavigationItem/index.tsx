@@ -9,6 +9,7 @@ const NavItem = styled.div`
 		margin: 0 5px;
 		color: #000;
 		text-decoration: none;
+		cursor: pointer;
 	}
 
 	&:not(:last-child):after {
