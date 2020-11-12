@@ -17,6 +17,7 @@ const initialState: InitialState = {
 	userId: null,
 	userLoading: false,
 	userError: null,
+	loading: false,
 }
 
 export const useGlobal = globalHook<InitialState, MyAssociatedActions>(

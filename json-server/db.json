@@ -14,55 +14,28 @@
       "text": "With this you can have a Fake API server in no time",
       "type": "story",
       "kids": [
-        {
-          "commentId": 2
-        }
+        2
       ],
       "parent": null
     },
     {
-<<<<<<< HEAD
       "kids": [],
-      "creationDate": "2020-11-12T17:58:23.443Z",
-      "text": "THIS IS A LINK TO THE DOC",
-      "url": "https://nextjs.org/docs/api-reference/next.config.js/react-strict-mode",
-      "title": "NEXT DOCUMENTARION",
+      "creationDate": "2020-11-12T19:12:56.615Z",
+      "text": "tesing number 2",
+      "url": "https://www.npmjs.com/package/node-fetch",
+      "title": "feching data",
       "by": "testing",
       "id": 2
     },
     {
       "kids": [],
-      "creationDate": "2020-11-12T17:59:37.043Z",
-      "text": "sending data to server",
-      "url": "https://nextjs.org/docs/api-reference/next.config.js/react-strict-mode",
-      "title": "next KS",
+      "creationDate": "2020-11-12T20:28:26.430Z",
+      "text": "THIS post will help you to create you loader",
+      "url": "https://projects.lukehaas.me/css-loaders/",
+      "title": "CREATE YOU LOADING",
       "by": "testing",
+      "type": "story",
       "id": 3
-    },
-    {
-      "kids": [],
-      "creationDate": "2020-11-12T18:07:44.177Z",
-      "text": "asdasd",
-      "url": "asdasd",
-      "title": "asdasd",
-      "by": "testing",
-      "id": 4
-=======
-      "id": 2,
-      "title": "this comment",
-      "url": null,
-      "by": "user",
-      "creationDate": "2020-11-11T22:02:02.451Z",
-      "likes": [
-        {
-          "userId": 1
-        }
-      ],
-      "text": "this is a comment",
-      "type": "comment",
-      "kids": [],
-      "parent": null
->>>>>>> master
     }
   ],
   "user": [
@@ -74,17 +47,14 @@
       "creationdate": "2020-11-11T21:02:02.451Z",
       "title": "Mr Test",
       "phone": "123456"
-<<<<<<< HEAD
-=======
     },
     {
-      "name": "Test",
-      "title": "Mr.",
-      "email": "test@test.com",
-      "password": "testtest",
-      "passwordConfirm": "testtest",
+      "name": "Roberth Zambrano",
+      "title": "Mr",
+      "email": "rjzg85@gmail.com",
+      "password": "1234",
+      "passwordConfirm": "1234",
       "id": 2
->>>>>>> master
     }
   ]
 }

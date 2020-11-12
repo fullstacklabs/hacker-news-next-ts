@@ -26,6 +26,10 @@ const Navigation: React.FC = () => {
 		<Nav>
 			<div>
 				<NavigationItem href="/">new</NavigationItem>
+
+				{isAuthenticated && (
+					<NavigationItem href="/addNews">Add new</NavigationItem>
+				)}
 			</div>
 
 			<RightNav>

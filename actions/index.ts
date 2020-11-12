@@ -87,6 +87,7 @@ const getMoreNews = async (store: Store<InitialState, MyAssociatedActions>) => {
 		},
 		news: [...store.state.news, ...getNewsDetail],
 	})
+	return [...store.state.news, ...getNewsDetail]
 }
 
 /* const getCommentsById = async (
@@ -145,6 +146,7 @@ const addNews = async (
 			url: url,
 			title: title,
 			by: "testing",
+			type: "story",
 		}
 		console.log(body)
 		await fetch("http://localhost:3001/news", {

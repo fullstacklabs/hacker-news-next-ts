@@ -33,17 +33,18 @@ const ToggleButton = styled.span`
 
 const Comment: FunctionComponent<CommentTypeComponent> = ({ id, comment }) => {
 	const [isExpanded, setIsExpanded] = useState(true)
-	const [_comment, setComment] = useState(comment)
+	const [_comment, setComment] = useState<CommentType>()
 
 	const expandToggleClick = () => {
 		setIsExpanded(!isExpanded)
 	}
 
 	useEffect(() => {
-		fetch(`${baseUrl}/item/${id}.json?print=pretty`)
+		fetch(`http://localhost:3001/news/${id}`)
 			.then((res) => res.json())
 			.then((data) => setComment({ ...comment, ...data }))
 	}, [id])
+	console.log(mapTime(Date.parse(_comment.creationDate)))
 
 	const toggleButton = (
 		<ToggleButton onClick={expandToggleClick}>
@@ -53,7 +54,9 @@ const Comment: FunctionComponent<CommentTypeComponent> = ({ id, comment }) => {
 
 	const header = (
 		<>
-			{_comment?.by} {mapTime(_comment?.time || 0)}&nbsp;{toggleButton}
+			{_comment?.by} {mapTime(_comment ? Date.parse(_comment.creationDate) : 0)}
+			&nbsp;
+			{toggleButton}
 		</>
 	)
 

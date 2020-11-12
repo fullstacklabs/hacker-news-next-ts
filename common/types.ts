@@ -62,6 +62,7 @@ export interface Comment {
 	time: number
 	text: string
 	type: string
+	creationDate: string
 }
 
 export interface ElementType {
