@@ -19,18 +19,27 @@ const NavItem = styled.div`
 `
 
 interface NavigationItemProps {
-	href: string
+	href?: string
+	onClick?: () => void
 	children: React.ReactNode
 }
 
-const NavigationItem: React.FC<NavigationItemProps> = ({ href, children }) => {
-	return (
-		<NavItem>
+const NavigationItem: React.FC<NavigationItemProps> = ({
+	href,
+	onClick,
+	children,
+}) => {
+	let link: React.ReactNode = null
+
+	if (href)
+		link = (
 			<Link href={href}>
 				<a>{children}</a>
 			</Link>
-		</NavItem>
-	)
+		)
+	else if (onClick) link = <a onClick={onClick}>{children}</a>
+
+	return <NavItem>{link}</NavItem>
 }
 
 export default NavigationItem

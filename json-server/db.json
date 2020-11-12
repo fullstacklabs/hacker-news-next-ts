@@ -21,6 +21,7 @@
       "parent": null
     },
     {
+<<<<<<< HEAD
       "kids": [],
       "creationDate": "2020-11-12T17:58:23.443Z",
       "text": "THIS IS A LINK TO THE DOC",
@@ -46,6 +47,22 @@
       "title": "asdasd",
       "by": "testing",
       "id": 4
+=======
+      "id": 2,
+      "title": "this comment",
+      "url": null,
+      "by": "user",
+      "creationDate": "2020-11-11T22:02:02.451Z",
+      "likes": [
+        {
+          "userId": 1
+        }
+      ],
+      "text": "this is a comment",
+      "type": "comment",
+      "kids": [],
+      "parent": null
+>>>>>>> master
     }
   ],
   "user": [
@@ -57,6 +74,17 @@
       "creationdate": "2020-11-11T21:02:02.451Z",
       "title": "Mr Test",
       "phone": "123456"
+<<<<<<< HEAD
+=======
+    },
+    {
+      "name": "Test",
+      "title": "Mr.",
+      "email": "test@test.com",
+      "password": "testtest",
+      "passwordConfirm": "testtest",
+      "id": 2
+>>>>>>> master
     }
   ]
 }

@@ -6,11 +6,8 @@ import { StyledInput, StyledButton, StyledError } from "../../components/UI"
 import Spinner from "../../components/UI/Spinner"
 
 type FormErrors = {
-	name?: string
-	title?: string
 	email?: string
 	password?: string
-	passwordConfirm?: string
 }
 
 const StyledForm = styled.form`
@@ -30,32 +27,20 @@ const Register: React.FC = () => {
 	return (
 		<Formik
 			initialValues={{
-				name: "",
-				title: "",
 				email: "",
 				password: "",
-				passwordConfirm: "",
 			}}
 			validate={(values) => {
 				const errors: FormErrors = {}
-
-				if (!values.name) errors.name = "Required"
-
-				if (!values.title) errors.title = "Required"
 
 				if (!values.email) errors.email = "Required"
 
 				if (!values.password) errors.password = "Required"
 
-				if (!values.passwordConfirm) errors.passwordConfirm = "Required"
-
-				if (values.password !== values.passwordConfirm)
-					errors.passwordConfirm = "Passwords don't match"
-
 				return errors
 			}}
 			onSubmit={async (values, { setSubmitting, resetForm }) => {
-				await actions.register(values)
+				await actions.login(values)
 				resetForm()
 				setSubmitting(false)
 			}}
@@ -71,32 +56,6 @@ const Register: React.FC = () => {
 			}) => (
 				<StyledForm onSubmit={handleSubmit}>
 					{userLoading && <Spinner />}
-
-					<StyledInput
-						type="text"
-						name="name"
-						onChange={handleChange}
-						onBlur={handleBlur}
-						value={values.name}
-						placeholder="Name"
-					/>
-
-					<StyledError>
-						{errors.name && touched.name && errors.name}
-					</StyledError>
-
-					<StyledInput
-						type="text"
-						name="title"
-						onChange={handleChange}
-						onBlur={handleBlur}
-						value={values.title}
-						placeholder="Title"
-					/>
-
-					<StyledError>
-						{errors.title && touched.title && errors.title}
-					</StyledError>
 
 					<StyledInput
 						type="email"
@@ -123,26 +82,10 @@ const Register: React.FC = () => {
 					<StyledError>
 						{errors.password && touched.password && errors.password}
 					</StyledError>
-
-					<StyledInput
-						type="password"
-						name="passwordConfirm"
-						onChange={handleChange}
-						onBlur={handleBlur}
-						value={values.passwordConfirm}
-						placeholder="Password Confirmation"
-					/>
-
-					<StyledError>
-						{errors.passwordConfirm &&
-							touched.passwordConfirm &&
-							errors.passwordConfirm}
-					</StyledError>
-
 					{userError && <StyledError>{userError}</StyledError>}
 
 					<StyledButton type="submit" disabled={isSubmitting}>
-						Submit
+						Login
 					</StyledButton>
 				</StyledForm>
 			)}

@@ -16,6 +16,9 @@ export interface InitialState {
 	comments: Comment[]
 	newsPage: News | null
 	loading: boolean
+	userId: number | null
+	userLoading: boolean
+	userError: string | null
 }
 
 export interface MyAssociatedActions {
@@ -29,6 +32,10 @@ export interface MyAssociatedActions {
 			"id" | "kids" | "score" | "time" | "type" | "descendants"
 		>
 	) => Promise<void>
+	login: (login: Login) => Promise<void>
+	register: (user: User) => Promise<void>
+	checkAuth: () => void
+	logout: () => void
 }
 
 export interface News {
@@ -60,4 +67,17 @@ export interface Comment {
 export interface ElementType {
 	type?: string
 	placeholder?: string
+}
+export interface Login {
+	email: string
+	password: string
+}
+
+export interface User {
+	id?: number
+	name: string
+	title: string
+	email: string
+	password?: string
+	passwordConfirm?: string
 }

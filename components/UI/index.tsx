@@ -17,13 +17,16 @@ export const StyledButton: StyledComponent<
 	Props,
 	never
 > = styled.button`
+	display: block;
 	appearance: none;
 	outline: 0;
 	border: 0;
-	margin: 10px auto;
+	margin: 15px auto 0;
 	padding: 10px 15px;
 	background: ${({ theme, color }) => (color ? color : theme.colors.primary)};
 	color: ${(props) => (props.textColor ? props.textColor : "#fff")};
+
+	font-size: 1.2rem;
 	cursor: pointer;
 	transition: 350ms;
 
@@ -237,4 +240,9 @@ export const StyledLoading = styled.div`
 				-2.6em 0em 0 0em rgba(255, 102, 0, 0.7), -1.8em -1.8em 0 0em #ff6600;
 		}
 	}
+`
+
+export const StyledError = styled.div`
+	text-align: center;
+	color: red;
 `

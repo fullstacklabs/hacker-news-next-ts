@@ -1,7 +1,9 @@
+import { useEffect } from "react"
 import { AppProps } from "next/app"
 import Head from "next/head"
 import { createGlobalStyle, ThemeProvider } from "styled-components"
 import Layout from "../components/Layout"
+import { useGlobal } from "../store"
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -27,6 +29,12 @@ const theme = {
 }
 
 export default function App({ Component, pageProps }: AppProps) {
+	const [, actions] = useGlobal()
+
+	useEffect(() => {
+		if (typeof window !== undefined) actions.checkAuth()
+	}, [])
+
 	return (
 		<>
 			<Head>
