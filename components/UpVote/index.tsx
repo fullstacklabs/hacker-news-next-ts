@@ -9,8 +9,12 @@ const StyledUpVote = styled.img`
 	cursor: pointer;
 `
 
-const UpVote: React.FC = () => (
-	<StyledUpVote src="/grayarrow.gif" alt="Upvote" />
+type OnClick = {
+	onClick?: () => void
+}
+
+const UpVote: React.FC<OnClick> = ({ onClick }) => (
+	<StyledUpVote src="/grayarrow.gif" alt="Upvote" onClick={onClick} />
 )
 
 export default UpVote
