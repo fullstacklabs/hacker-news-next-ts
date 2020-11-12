@@ -1,7 +1,10 @@
-export const mapTime = (timestamp: number) => {
+export const mapTime = (timestamp: Date) => {
+	if (!timestamp) {
+		return false
+	}
 	const currentDate = new Date()
 	const seconds: number = Math.floor(
-		(currentDate.getTime() - timestamp * 1000) / 1000
+		(currentDate.getTime() - timestamp.getTime()) / 1000
 	)
 
 	let interval = Math.floor(seconds / 31536000)

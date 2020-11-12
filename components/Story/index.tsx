@@ -55,7 +55,7 @@ const Details = styled.div`
 `
 
 const Story: React.FC<Props> = ({ news, rank }) => {
-	const { title, url, by, time, score, descendants, id } = news
+	const { title, url, by, creationDate, score, descendants, id } = news
 
 	let titleLink: React.ReactNode = title
 	let hostname = ""
@@ -83,7 +83,7 @@ const Story: React.FC<Props> = ({ news, rank }) => {
 				<Link href={`/news/${id}`}>
 					<a>{score} points</a>
 				</Link>
-				&nbsp;| by {by} | {mapTime(time)} |&nbsp;
+				&nbsp;| by {by} | {mapTime(new Date(`${creationDate}`))} |&nbsp;
 				<Link href={`/news/${id}`}>
 					<a>{descendants} comments</a>
 				</Link>

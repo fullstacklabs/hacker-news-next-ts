@@ -32,7 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
 	const [, actions] = useGlobal()
 
 	useEffect(() => {
-		if (typeof window !== undefined) actions.checkAuth()
+		if (typeof window !== "undefined") actions.checkAuth()
 	}, [])
 
 	return (

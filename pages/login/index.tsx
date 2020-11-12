@@ -20,7 +20,7 @@ const Register: React.FC = () => {
 
 	const { userLoading, userError } = state
 
-	if (state.userId) {
+	if (state.user) {
 		router.push("/")
 	}
 

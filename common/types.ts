@@ -16,7 +16,7 @@ export interface InitialState {
 	comments: Comment[]
 	newsPage: News | null
 	loading: boolean
-	userId: number | null
+	user: User | null
 	userLoading: boolean
 	userError: string | null
 }
@@ -34,6 +34,7 @@ export interface MyAssociatedActions {
 	) => Promise<void>
 	login: (login: Login) => Promise<void>
 	register: (user: User) => Promise<void>
+	editUser: (user: User, id: number) => Promise<void>
 	checkAuth: () => void
 	logout: () => void
 }
