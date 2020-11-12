@@ -33,11 +33,16 @@ export interface MyAssociatedActions {
 		>,
 		userId: number
 	) => Promise<void>
+	toggleNewsLike: (newsId: number) => void
 	login: (login: Login) => Promise<void>
 	register: (user: User) => Promise<void>
 	editUser: (user: User, id: number) => Promise<void>
 	checkAuth: () => void
 	logout: () => void
+}
+
+type Like = {
+	userId: number
 }
 
 export interface News {
@@ -51,7 +56,7 @@ export interface News {
 	descendants: number
 	userId: number
 	text?: string
-	likes?: []
+	likes: Like[]
 	creationDate?: string
 }
 
@@ -76,7 +81,7 @@ export interface Login {
 }
 
 export interface User {
-	id?: number
+	id: number
 	name: string
 	title: string
 	email: string

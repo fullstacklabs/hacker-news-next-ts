@@ -4,7 +4,7 @@ export const mapTime = (date: string) => {
 	const seconds: number = Math.floor(
 		(currentDate.getTime() - oldDate.getTime()) / 1000
 	)
-	console.log(oldDate, date)
+
 	let interval = Math.floor(seconds / 31536000)
 
 	if (interval > 1) {

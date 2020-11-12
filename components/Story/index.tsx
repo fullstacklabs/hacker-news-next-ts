@@ -1,4 +1,5 @@
-import React from "react"
+import React, { useCallback } from "react"
+import { useGlobal } from "../../store"
 import { News } from "../../common/types"
 import { mapTime } from "../../common/util"
 import Link from "next/link"
@@ -55,7 +56,12 @@ const Details = styled.div`
 `
 
 const Story: React.FC<Props> = ({ news, rank }) => {
+	const [, actions] = useGlobal()
 	const { title, url, by, creationDate, score, descendants, id } = news
+
+	const likeToggleHandler = useCallback(() => {
+		actions.toggleNewsLike(news.id)
+	}, [])
 
 	let titleLink: React.ReactNode = title
 	let hostname = ""
@@ -75,7 +81,7 @@ const Story: React.FC<Props> = ({ news, rank }) => {
 		<StyledNews>
 			<Header>
 				{rank && <Title>{rank}.</Title>}
-				<UpVote />
+				<UpVote onClick={likeToggleHandler} />
 				<Title>{titleLink}</Title>
 				{url && (
 					<Domain>

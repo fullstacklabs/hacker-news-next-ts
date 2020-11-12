@@ -169,12 +169,52 @@ const addNews = async (
 	}
 }
 
+const toggleNewsLike = async (
+	store: Store<InitialState, MyAssociatedActions>,
+	newsId: number
+) => {
+	try {
+		const { user } = store.state
+
+		if (!user) throw new Error("Not logged in")
+
+		const currentNewsRes = await fetch(`http://localhost:3001/news/${newsId}`, {
+			headers: {
+				Accept: "application/json, text/plain, */*",
+				"Content-Type": "application/json",
+			},
+		})
+
+		const currentNews = await currentNewsRes.json()
+
+		const likes = [...currentNews.likes]
+
+		const userLikeIndex = likes.findIndex((like) => like.userId === user.id)
+
+		if (userLikeIndex === -1) likes.push({ userId: user.id })
+		else likes.splice(userLikeIndex, 1)
+
+		const res = await fetch(`http://localhost:3001/news/${newsId}`, {
+			method: "PATCH",
+			headers: {
+				Accept: "application/json, text/plain, */*",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ likes }),
+		})
+	} catch (error) {
+		alert(error)
+		console.error(error)
+	}
+}
+
 export const actions = {
 	fetchNewStories,
 	getNewStories,
 	getMoreNews,
 	getNewsById,
 	addNews,
+	toggleNewsLike,
 	login,
 	register,
 	checkAuth,
