@@ -25,7 +25,10 @@ export interface MyAssociatedActions {
 	getMoreNews: () => Promise<void>
 	// getCommentsById: (id: number[]) => Promise<void>
 	getNewsById: (id: number) => Promise<void>
+	login: (login: Login) => Promise<void>
 	register: (user: User) => Promise<void>
+	checkAuth: () => void
+	logout: () => void
 }
 
 export interface News {
@@ -49,6 +52,11 @@ export interface Comment {
 	time: number
 	text: string
 	type: string
+}
+
+export interface Login {
+	email: string
+	password: string
 }
 
 export interface User {
