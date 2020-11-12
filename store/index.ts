@@ -14,6 +14,9 @@ const initialState: InitialState = {
 	news: [],
 	comments: [],
 	newsPage: null,
+	userId: null,
+	userLoading: false,
+	userError: null,
 }
 
 export const useGlobal = globalHook<InitialState, MyAssociatedActions>(
