@@ -15,6 +15,7 @@ export interface InitialState {
 	news: News[]
 	comments: Comment[]
 	newsPage: News | null
+	loading: boolean
 }
 
 export interface MyAssociatedActions {
@@ -22,6 +23,12 @@ export interface MyAssociatedActions {
 	getMoreNews: () => Promise<void>
 	// getCommentsById: (id: number[]) => Promise<void>
 	getNewsById: (id: number) => Promise<void>
+	addNews: (
+		newsData: Omit<
+			News,
+			"id" | "kids" | "score" | "time" | "type" | "descendants"
+		>
+	) => Promise<void>
 }
 
 export interface News {
@@ -34,6 +41,9 @@ export interface News {
 	url: string
 	type: string
 	descendants: number
+	text?: string
+	likes?: []
+	creationDate?: string
 }
 
 export interface Comment {
@@ -45,4 +55,9 @@ export interface Comment {
 	time: number
 	text: string
 	type: string
+}
+
+export interface ElementType {
+	type?: string
+	placeholder?: string
 }

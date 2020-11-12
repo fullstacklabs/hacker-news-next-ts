@@ -112,23 +112,62 @@ const getMoreNews = async (store: Store<InitialState, MyAssociatedActions>) => {
 	}
 } */
 
-const getNewsById = async(
+const getNewsById = async (
 	store: Store<InitialState, MyAssociatedActions>,
-	id: number) => {
-		try {
-			const newsItem: News[] = await getDataDetail([id])
-			store.setState({
-				...store.state,
-				newsPage: newsItem[0]
-			})
-		} catch (e) {
-			store.setState({ ...store.state, error: e.message as string })
-		}
+	id: number
+) => {
+	try {
+		const newsItem: News[] = await getDataDetail([id])
+		store.setState({
+			...store.state,
+			newsPage: newsItem[0],
+		})
+	} catch (e) {
+		store.setState({ ...store.state, error: e.message as string })
 	}
+}
+
+const addNews = async (
+	store: Store<InitialState, MyAssociatedActions>,
+	newsData: Omit<
+		News,
+		"id" | "kids" | "score" | "time" | "type" | "descendants"
+	>
+) => {
+	try {
+		store.setState({ ...store.state, loading: true })
+		const { by, title, url, text, likes, creationDate } = newsData
+		const body = {
+			kids: [],
+			creationDate: new Date().toISOString(),
+			text: text,
+			url: url,
+			title: title,
+			by: "testing",
+		}
+		console.log(body)
+		await fetch("http://localhost:3001/news", {
+			method: "post",
+			body: JSON.stringify(body),
+			headers: { "Content-Type": "application/json" },
+		})
+			.then((res) => res.json())
+			.then((json) => console.log(json))
+
+		store.setState({ ...store.state, loading: false })
+	} catch (e) {
+		store.setState({
+			...store.state,
+			error: e.message as string,
+			loading: false,
+		})
+	}
+}
 
 export const actions = {
 	fetchNewStories,
 	getNewStories,
 	getMoreNews,
-	getNewsById
+	getNewsById,
+	addNews,
 }

@@ -1,4 +1,5 @@
 import { AppProps } from "next/app"
+import Head from "next/head"
 import { createGlobalStyle, ThemeProvider } from "styled-components"
 import Layout from "../components/Layout"
 
@@ -28,6 +29,9 @@ const theme = {
 export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<>
+			<Head>
+				<title>Hacker News</title>
+			</Head>
 			<GlobalStyle />
 			<ThemeProvider theme={theme}>
 				<Layout>
