@@ -7,7 +7,7 @@ import { InitialState, News } from "../../common/types"
 import Router from "next/router"
 import { ChangeEvent, useState } from "react"
 
-interface Props extends InitialState, News {}
+interface Props {}
 const defaultState: Omit<
 	News,
 	"id" | "kids" | "score" | "time" | "type" | "descendants"
