@@ -3,8 +3,13 @@ import { InitialState, MyAssociatedActions, User, Login } from "../common/types"
 
 const baseURL = "http://localhost:3001"
 
-export const logout = () => {
-	localStorage.removeItem("userId")
+export const logout = (store: Store<InitialState, MyAssociatedActions>) => {
+	localStorage.removeItem("user")
+
+	store.setState({
+		...store.state,
+		user: null,
+	})
 }
 
 export const login = async (
@@ -35,13 +40,13 @@ export const login = async (
 			if (resUser.password === login.password) {
 				loginSuccess = true
 
-				localStorage.setItem("userId", resUser.id)
+				localStorage.setItem("user", JSON.stringify(resUser))
 
 				store.setState({
 					...store.state,
 					userLoading: false,
 					userError: null,
-					userId: resUser.id,
+					user: resUser,
 				})
 			}
 		}
@@ -83,13 +88,13 @@ export const register = async (
 
 		const resJson = await res.json()
 
-		localStorage.setItem("userId", resJson.id)
+		localStorage.setItem("user", JSON.stringify(resJson))
 
 		store.setState({
 			...store.state,
 			userLoading: false,
 			userError: null,
-			userId: resJson.id,
+			user: resJson,
 		})
 	} catch (error) {
 		store.setState({
@@ -103,11 +108,53 @@ export const register = async (
 }
 
 export const checkAuth = (store: Store<InitialState, MyAssociatedActions>) => {
-	const userId = localStorage.getItem("userId")
+	const user = localStorage.getItem("user")
 
-	if (userId)
+	if (user)
 		store.setState({
 			...store.state,
-			userId: parseInt(userId, 10),
+			user: JSON.parse(user),
 		})
+}
+
+export const editUser = async (
+	store: Store<InitialState, MyAssociatedActions>,
+	user: User,
+	id: number
+) => {
+	store.setState({
+		...store.state,
+		userLoading: true,
+		userError: null,
+	})
+
+	try {
+		const res = await fetch(`${baseURL}/user/${id}`, {
+			method: "PATCH",
+			headers: {
+				Accept: "application/json, text/plain, */*",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(user),
+		})
+
+		const resJson = await res.json()
+
+		localStorage.setItem("user", JSON.stringify(resJson))
+
+		store.setState({
+			...store.state,
+			userLoading: false,
+			userError: null,
+			user: resJson,
+		})
+	} catch (error) {
+		store.setState({
+			...store.state,
+			userLoading: false,
+			userError: error,
+		})
+
+		console.error(error)
+	}
 }
