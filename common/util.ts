@@ -1,12 +1,14 @@
+
 export const mapTime = (timestamp: Date) => {
 	if (!timestamp) {
 		return false
 	}
 	const currentDate = new Date()
+	const oldDate = new Date(date)
 	const seconds: number = Math.floor(
 		(currentDate.getTime() - timestamp.getTime()) / 1000
 	)
-
+	console.log(oldDate, date)
 	let interval = Math.floor(seconds / 31536000)
 
 	if (interval > 1) {

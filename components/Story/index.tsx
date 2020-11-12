@@ -61,10 +61,14 @@ const Story: React.FC<Props> = ({ news, rank }) => {
 	let hostname = ""
 
 	if (url) {
-		const parsedDomain = new URL(url)
-		hostname = parsedDomain.hostname
+		try {
+			const parsedDomain = new URL(url)
+			hostname = parsedDomain.hostname
 
-		titleLink = <a href={url}>{title}</a>
+			titleLink = <a href={url}>{title}</a>
+		} catch (error) {
+			console.error(error)
+		}
 	}
 
 	return (
@@ -84,6 +88,9 @@ const Story: React.FC<Props> = ({ news, rank }) => {
 					<a>{score} points</a>
 				</Link>
 				&nbsp;| by {by} | {mapTime(new Date(`${creationDate}`))} |&nbsp;
+
+				&nbsp;| by {by} | {creationDate && mapTime(creationDate)} |&nbsp;
+
 				<Link href={`/news/${id}`}>
 					<a>{descendants} comments</a>
 				</Link>

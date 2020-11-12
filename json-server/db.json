@@ -16,7 +16,8 @@
       "kids": [
         2
       ],
-      "parent": null
+      "parent": null,
+      "userId": 1
     },
     {
       "kids": [],
@@ -25,7 +26,8 @@
       "url": "https://www.npmjs.com/package/node-fetch",
       "title": "feching data",
       "by": "testing",
-      "id": 2
+      "id": 2,
+      "userId": 1
     },
     {
       "kids": [],
@@ -35,7 +37,30 @@
       "title": "CREATE YOU LOADING",
       "by": "testing",
       "type": "story",
-      "id": 3
+      "id": 3,
+      "userId": 1
+    },
+    {
+      "kids": [],
+      "creationDate": "2020-11-12T21:04:06.510Z",
+      "text": "More tests",
+      "url": "http://localhost:3001",
+      "title": "test",
+      "by": "testing",
+      "type": "story",
+      "userId": 2,
+      "id": 4
+    },
+    {
+      "kids": [],
+      "creationDate": "2020-11-12T21:05:05.836Z",
+      "text": "More",
+      "url": "http://localhost:3001",
+      "title": "Another test",
+      "by": "testing",
+      "type": "story",
+      "userId": 2,
+      "id": 5
     }
   ],
   "user": [
