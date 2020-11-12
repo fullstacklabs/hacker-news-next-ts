@@ -1,4 +1,6 @@
+import { useCallback } from "react"
 import styled from "styled-components"
+import { useGlobal } from "../../store"
 import NavigationItem from "../NavigationItem"
 
 const Nav = styled.nav`
@@ -13,6 +15,13 @@ const RightNav = styled.div`
 `
 
 const Navigation: React.FC = () => {
+	const [state, actions] = useGlobal()
+	const logoutHandler = useCallback(() => {
+		actions.logout()
+	}, [])
+
+	const isAuthenticated = !!state.userId
+
 	return (
 		<Nav>
 			<div>
@@ -20,7 +29,18 @@ const Navigation: React.FC = () => {
 			</div>
 
 			<RightNav>
-				<NavigationItem href="/register">register</NavigationItem>
+				{isAuthenticated && (
+					<>
+						<NavigationItem href="/user">profile</NavigationItem>
+						<NavigationItem onClick={logoutHandler}>logout</NavigationItem>
+					</>
+				)}
+				{!isAuthenticated && (
+					<>
+						<NavigationItem href="/login">login</NavigationItem>
+						<NavigationItem href="/register">register</NavigationItem>
+					</>
+				)}
 			</RightNav>
 		</Nav>
 	)

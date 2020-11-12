@@ -54,22 +54,6 @@
       "password": "testtest",
       "passwordConfirm": "testtest",
       "id": 2
-    },
-    {
-      "name": "Test",
-      "title": "Mr.",
-      "email": "test@test.com",
-      "password": "testtest",
-      "passwordConfirm": "testtest",
-      "id": 3
-    },
-    {
-      "name": "Test",
-      "title": "Mr.",
-      "email": "test@test.com",
-      "password": "testtest",
-      "passwordConfirm": "testtest",
-      "id": 4
     }
   ]
 }
