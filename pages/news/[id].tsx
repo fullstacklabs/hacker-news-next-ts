@@ -4,31 +4,29 @@ import { useGlobal } from "../../store"
 import { actions } from "../../actions"
 import Comments from "../../components/Comments"
 import Story from "../../components/Story"
+import { News as NewsType } from "../../common/types"
+import { useRouter } from "next/router"
 
 interface Props {
 	id: number
+	newsPage: NewsType
+	error: boolean
 }
 
 const StyledNews = styled.div`
 	padding: 10px;
 `
 
-const News: React.FC<Props> = ({ id }) => {
-	const [state, actions] = useGlobal()
+const News: React.FC<Props> = ({ id, newsPage, error }) => {
+	if (error) return <StyledNews>{error}</StyledNews>
 
-	useEffect(() => {
-		actions.getNewsById(id)
-	}, [])
+	if (!newsPage) return <StyledNews>Loading...</StyledNews>
 
-	if (state.error) return <StyledNews>{state.error}</StyledNews>
-
-	if (!state.newsPage) return <StyledNews>Loading...</StyledNews>
-
-	const { kids } = state.newsPage
+	const { kids } = newsPage
 
 	return (
 		<React.Fragment>
-			<Story news={state.newsPage} />
+			<Story news={newsPage} />
 			<Comments kids={kids} />
 		</React.Fragment>
 	)
@@ -41,20 +39,28 @@ type Params = {
 }
 
 export async function getStaticProps({ params }: Params) {
+	console.log(params.id)
+
+	const res = await fetch(`http://localhost:3001/news/${params.id}`)
+	const resData = await res.json()
+
 	return {
 		props: {
 			id: parseInt(params.id, 10),
+			newsPage: resData,
+			error: false,
 		},
 	}
 }
 
 export async function getStaticPaths() {
-	const jsonData = await actions.fetchNewStories()
+	const res = await fetch("http://localhost:3001/news")
+	const resData = await res.json()
 
 	return {
-		paths: jsonData.map((news: number) => ({
+		paths: resData.map((news: NewsType) => ({
 			params: {
-				id: news.toString(),
+				id: news.id.toString(),
 			},
 		})),
 		fallback: false,

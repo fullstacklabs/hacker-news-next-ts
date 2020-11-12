@@ -1,35 +1,29 @@
-import React, { useEffect, useState } from "react"
-import { useGlobal } from "../store"
-import InfiniteScroll from "react-infinite-scroll-component"
-import { InitialState } from "../common/types"
+import { NextPage } from "next"
+import { actions } from "../actions"
+import { News } from "../common/types"
 import Story from "../components/Story"
 
-interface Props extends InitialState {}
+interface Props {
+	userAgent?: string
+	stories: News[]
+}
 
-const Home: React.FC<Props> = () => {
-	const [state, actions] = useGlobal()
-
-	useEffect(() => {
-		actions.getNewStories()
-	}, [])
-
+const Page: NextPage<Props> = ({ stories }) => {
 	return (
 		<div>
-			<InfiniteScroll
-				dataLength={state.news.length}
-				next={actions.getMoreNews}
-				hasMore={state.hasMore}
-				loader={<h4>Loading...</h4>}
-			>
-				<div>
-					{state.news &&
-						state.news.map((item, index) => (
-							<Story key={index} news={item} rank={index + 1} />
-						))}
-				</div>
-			</InfiniteScroll>
+			{stories &&
+				stories.map((item, index) => (
+					<Story key={index} news={item} rank={index + 1} />
+				))}
 		</div>
 	)
 }
 
-export default Home
+Page.getInitialProps = async () => {
+	const res = await fetch("http://localhost:3001/news?type=story")
+	const resData = await res.json()
+
+	return { stories: resData }
+}
+
+export default Page
