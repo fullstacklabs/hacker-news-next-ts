@@ -23,7 +23,7 @@ const Register: React.FC = () => {
 
 	const { userLoading, userError } = state
 
-	if (state.userId) {
+	if (state.user) {
 		router.push("/")
 	}
 
@@ -55,7 +55,12 @@ const Register: React.FC = () => {
 				return errors
 			}}
 			onSubmit={async (values, { setSubmitting, resetForm }) => {
-				await actions.register(values)
+				const user = {
+					...values,
+					passwordConfirm: undefined,
+				}
+
+				await actions.register(user)
 				resetForm()
 				setSubmitting(false)
 			}}

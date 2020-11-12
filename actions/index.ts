@@ -6,7 +6,7 @@ import {
 	News,
 } from "../common/types"
 import { baseUrl, displayNumber, newStoriesUrl } from "../common/constants"
-import { login, register, checkAuth, logout } from "./auth"
+import { login, register, checkAuth, logout, editUser } from "./auth"
 
 const getDataDetail = async (ids: number[]): Promise<News[]> => {
 	const addingNews: News[] = await Promise.all(
@@ -175,4 +175,5 @@ export const actions = {
 	register,
 	checkAuth,
 	logout,
+	editUser,
 }
