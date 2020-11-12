@@ -29,8 +29,9 @@ export interface MyAssociatedActions {
 	addNews: (
 		newsData: Omit<
 			News,
-			"id" | "kids" | "score" | "time" | "type" | "descendants"
-		>
+			"id" | "kids" | "score" | "time" | "type" | "descendants" | "userId"
+		>,
+		userId: number
 	) => Promise<void>
 	login: (login: Login) => Promise<void>
 	register: (user: User) => Promise<void>
@@ -44,11 +45,11 @@ export interface News {
 	id: number
 	kids: number[]
 	score: number
-	time: number
 	title: string
 	url: string
 	type: string
 	descendants: number
+	userId: number
 	text?: string
 	likes?: []
 	creationDate?: string
@@ -60,7 +61,6 @@ export interface Comment {
 	id: number
 	kids?: number[]
 	parent: number
-	time: number
 	text: string
 	type: string
 	creationDate: string

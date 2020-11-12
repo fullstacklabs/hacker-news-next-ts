@@ -134,7 +134,8 @@ const addNews = async (
 	newsData: Omit<
 		News,
 		"id" | "kids" | "score" | "time" | "type" | "descendants"
-	>
+	>,
+	userId: number
 ) => {
 	try {
 		store.setState({ ...store.state, loading: true })
@@ -147,6 +148,7 @@ const addNews = async (
 			title: title,
 			by: "testing",
 			type: "story",
+			userId,
 		}
 		console.log(body)
 		await fetch("http://localhost:3001/news", {

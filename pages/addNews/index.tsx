@@ -1,3 +1,4 @@
+import { useRouter } from "next/router"
 import Input from "../../components/UI/input"
 import { StyledButton, StyledLoading } from "../../components/UI"
 import { Container } from "../../components/UI"
@@ -10,7 +11,7 @@ import { ChangeEvent, useState } from "react"
 interface Props {}
 const defaultState: Omit<
 	News,
-	"id" | "kids" | "score" | "time" | "type" | "descendants"
+	"id" | "kids" | "score" | "time" | "type" | "descendants" | "userId"
 > = {
 	by: "",
 	title: "",
@@ -23,13 +24,24 @@ const AddNews: React.FC<Props> = () => {
 		placeholder: "",
 	}
 	const [newsData, setNewsData] = useState<
-		Omit<News, "id" | "kids" | "score" | "time" | "type" | "descendants">
+		Omit<
+			News,
+			"id" | "kids" | "score" | "time" | "type" | "descendants" | "userId"
+		>
 	>(defaultState)
 	const [globalState, actions] = useGlobal()
+	const router = useRouter()
 
-	const saveHandler = () => {
-		actions.addNews(newsData)
-		//console.log(newsData)
+	if (!globalState.user || !globalState.user.id) {
+		if (typeof window !== "undefined" && router) router.push("/")
+		return null
+	}
+
+	const userId = globalState.user.id
+
+	const saveHandler = async () => {
+		await actions.addNews(newsData, userId)
+		router.push("/")
 	}
 	const onTitleChangeHanlder = (
 		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

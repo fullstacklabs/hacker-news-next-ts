@@ -4,7 +4,6 @@ import UpVote from "../UpVote"
 import { mapTime } from "../../common/util"
 import { Comment as CommentType } from "../../common/types"
 import { FunctionComponent, useEffect, useState } from "react"
-import { baseUrl } from "../../common/constants"
 
 interface CommentTypeComponent {
 	comment?: CommentType
@@ -44,7 +43,6 @@ const Comment: FunctionComponent<CommentTypeComponent> = ({ id, comment }) => {
 			.then((res) => res.json())
 			.then((data) => setComment({ ...comment, ...data }))
 	}, [id])
-	console.log(mapTime(Date.parse(_comment.creationDate)))
 
 	const toggleButton = (
 		<ToggleButton onClick={expandToggleClick}>
@@ -54,7 +52,7 @@ const Comment: FunctionComponent<CommentTypeComponent> = ({ id, comment }) => {
 
 	const header = (
 		<>
-			{_comment?.by} {mapTime(_comment ? Date.parse(_comment.creationDate) : 0)}
+			{_comment?.by} {mapTime(_comment ? _comment.creationDate : "")}
 			&nbsp;
 			{toggleButton}
 		</>
