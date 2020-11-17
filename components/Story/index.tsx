@@ -93,7 +93,10 @@ const Story: React.FC<Props> = ({ news, rank }) => {
 				<Link href={`/news/${id}`}>
 					<a>{score} points</a>
 				</Link>
+				&nbsp;| by {by} | {mapTime(new Date(`${creationDate}`))} |&nbsp;
+
 				&nbsp;| by {by} | {creationDate && mapTime(creationDate)} |&nbsp;
+
 				<Link href={`/news/${id}`}>
 					<a>{descendants} comments</a>
 				</Link>

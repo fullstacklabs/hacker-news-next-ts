@@ -52,7 +52,10 @@ const Comment: FunctionComponent<CommentTypeComponent> = ({ id, comment }) => {
 
 	const header = (
 		<>
-			{_comment?.by} {mapTime(_comment ? _comment.creationDate : "")}
+			{_comment?.by}{" "}
+			{_comment &&
+				_comment.creationDate &&
+				mapTime(new Date(`${_comment.creationDate}`))}
 			&nbsp;
 			{toggleButton}
 		</>
