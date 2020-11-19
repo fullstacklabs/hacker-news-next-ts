@@ -1,120 +1,170 @@
+import { useContext } from "react"
+import { GetServerSideProps } from "next"
 import { useRouter } from "next/router"
-import Input from "../../components/UI/input"
-import { StyledButton, StyledLoading } from "../../components/UI"
-import { Container } from "../../components/UI"
 import Head from "next/head"
-import { useGlobal } from "../../store"
-import { InitialState, News } from "../../common/types"
-import Router from "next/router"
-import { ChangeEvent, useState } from "react"
+import { Formik } from "formik"
+import cookies from "next-cookies"
+import { UserContext } from "../../common/UserContext"
+import { Container } from "../../components/UI"
+import Input from "../../components/UI/input"
+import { StyledButton, StyledLoading, StyledError } from "../../components/UI"
+import { useRequireUser, useAPI } from "../../common/util"
+import { NewsSubmit, User } from "../../common/types"
 
-interface Props {}
-const defaultState: Omit<
-	News,
-	"id" | "kids" | "score" | "time" | "type" | "descendants" | "userId"
-> = {
-	by: "",
-	title: "",
-	url: "",
+type FormErrors = {
+	title?: string
+	url?: string
+	text?: string
 }
 
-const AddNews: React.FC<Props> = () => {
-	let elementConfig = {
-		type: "text",
-		placeholder: "",
-	}
-	const [newsData, setNewsData] = useState<
-		Omit<
-			News,
-			"id" | "kids" | "score" | "time" | "type" | "descendants" | "userId"
-		>
-	>(defaultState)
-	const [globalState, actions] = useGlobal()
+interface Props {
+	serverUser: User | string
+}
+
+const AddNewsPage: React.FC<Props> = ({ serverUser }) => {
+	const { loading, error, callAPI } = useAPI({
+		method: "post",
+	})
 	const router = useRouter()
+	const { user: clientUser } = useContext(UserContext)
+	const typedServerUser = typeof serverUser !== "string" ? serverUser : null
+	const user = clientUser || typedServerUser
+	useRequireUser(user)
 
-	if (!globalState.user || !globalState.user.id) {
-		if (typeof window !== "undefined" && router) router.push("/")
-		return null
-	}
-
-	const userId = globalState.user.id
-
-	const saveHandler = async () => {
-		await actions.addNews(newsData, userId)
-		router.push("/")
-	}
-	const onTitleChangeHanlder = (
-		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		console.log(newsData)
-		setNewsData({ ...newsData, ...{ title: e.target.value } })
-	}
-	const onUrlChangeHanlder = (
-		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		setNewsData({ ...newsData, ...{ url: e.target.value } })
-	}
-	const onTextChangeHanlder = (
-		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		setNewsData({ ...newsData, ...{ text: e.target.value } })
-	}
+	if (!user) return null
 
 	return (
 		<Container>
 			<Head>
 				<title>Add news</title>
 			</Head>
+
 			<h1>New Story</h1>
-			{globalState.loading ? (
+
+			{loading ? (
 				<StyledLoading />
 			) : (
-				<>
-					{" "}
-					<Input
-						type="text"
-						value={newsData.title}
-						label="Title"
-						onChangeHanlder={onTitleChangeHanlder}
-						elementConfig={elementConfig}
-					/>
-					<Input
-						type="text"
-						value={newsData.url}
-						label="URL"
-						key="url"
-						onChangeHanlder={onUrlChangeHanlder}
-						elementConfig={elementConfig}
-					/>
-					<Input
-						type="textarea"
-						value={newsData.text}
-						label="Summary"
-						onChangeHanlder={onTextChangeHanlder}
-						elementConfig={elementConfig}
-					/>
-					<div
-						style={{
-							justifyContent: "space-between",
-							display: "flex",
-							maxWidth: "300px",
-							margin: "auto",
-							padding: "10px 0",
-						}}
-					>
-						<StyledButton
-							color={"white"}
-							textColor="black"
-							onClick={() => Router.push("/")}
-						>
-							Cancel
-						</StyledButton>
-						<StyledButton onClick={saveHandler}>Save</StyledButton>
-					</div>
-				</>
+				<Formik
+					initialValues={{
+						title: "",
+						url: "",
+						text: "",
+					}}
+					validate={(values: NewsSubmit) => {
+						const errors: FormErrors = {}
+
+						if (!values.title) errors.title = "Required"
+
+						if (!values.text) errors.text = "Required"
+
+						return errors
+					}}
+					onSubmit={async (values, { setSubmitting, resetForm }) => {
+						const { title, url, text } = values
+
+						const body = {
+							kids: [],
+							creationDate: new Date().toISOString(),
+							text,
+							url,
+							title,
+							by: user.name,
+							type: "story",
+							user: user.id,
+						}
+
+						if (
+							await callAPI("/news", {
+								body: JSON.stringify(body),
+							})
+						) {
+							resetForm()
+							router.push("/")
+						}
+
+						setSubmitting(false)
+					}}
+				>
+					{({
+						values,
+						errors,
+						touched,
+						handleChange,
+						handleBlur,
+						handleSubmit,
+						isSubmitting,
+					}) => (
+						<form onSubmit={handleSubmit}>
+							<Input
+								type="text"
+								name="title"
+								onChange={handleChange}
+								onBlur={handleBlur}
+								value={values.title}
+								label="Title"
+								error={errors.title}
+								touched={!!touched.title}
+							/>
+
+							<Input
+								type="text"
+								name="url"
+								onChange={handleChange}
+								onBlur={handleBlur}
+								value={values.url}
+								label="URL"
+								error={errors.url}
+								touched={!!touched.url}
+							/>
+
+							<Input
+								type="textarea"
+								name="text"
+								onChange={handleChange}
+								onBlur={handleBlur}
+								value={values.text}
+								label="Summary"
+								error={errors.text}
+								touched={!!touched.text}
+							/>
+
+							<div
+								style={{
+									justifyContent: "space-between",
+									display: "flex",
+									maxWidth: "300px",
+									margin: "auto",
+									padding: "10px 0",
+								}}
+							>
+								<StyledButton
+									color={"white"}
+									textColor="black"
+									onClick={() => router.push("/")}
+								>
+									Cancel
+								</StyledButton>
+
+								<StyledButton type="submit" disabled={isSubmitting}>
+									Save
+								</StyledButton>
+
+								{error && <StyledError>{error}</StyledError>}
+							</div>
+						</form>
+					)}
+				</Formik>
 			)}
 		</Container>
 	)
 }
 
-export default AddNews
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+	return {
+		props: {
+			serverUser: cookies(ctx).user || "",
+		},
+	}
+}
+
+export default AddNewsPage

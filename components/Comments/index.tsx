@@ -1,10 +1,10 @@
 import Comment from "../Comment"
 
-interface Prop {
+interface Props {
 	kids: number[]
 }
 
-const Comments: React.FC<Prop> = ({ kids }) => {
+const Comments: React.FC<Props> = ({ kids }) => {
 	return (
 		<div>
 			{kids && kids.slice(0, 10).map((id) => <Comment id={id} key={id} />)}

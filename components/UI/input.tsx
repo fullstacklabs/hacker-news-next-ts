@@ -1,45 +1,40 @@
-import { ChangeEvent } from "react"
-import { InputContainer, LabelInput, StyledInput, StyledTextarea } from "."
-import { ElementType } from "../../common/types"
+import { InputHTMLAttributes, TextareaHTMLAttributes } from "react"
+import {
+	InputContainer,
+	LabelInput,
+	StyledInput,
+	StyledTextarea,
+	StyledError,
+} from "."
 
 interface Props {
+	type: string
 	label?: string
-	type?: string
-	value?: string
-	elementConfig?: ElementType
-	onChangeHanlder: (
-		e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => void
+	touched: boolean
+	error?: string
 }
 
-const Input: React.FC<Props> = ({
-	type,
-	value,
-	elementConfig,
-	onChangeHanlder,
-	label,
-}) => {
+const Input: React.FC<
+	Props &
+		InputHTMLAttributes<HTMLInputElement> &
+		TextareaHTMLAttributes<HTMLTextAreaElement>
+> = ({ type, label, touched, error, ...props }) => {
 	let inputElement = null
+
 	switch (type) {
-		case "text":
-			inputElement = (
-				<StyledInput {...elementConfig} onChange={onChangeHanlder} />
-			)
-			break
 		case "textarea":
-			inputElement = (
-				<StyledTextarea {...elementConfig} onChange={onChangeHanlder} />
-			)
+			inputElement = <StyledTextarea {...props} />
 			break
 		default:
-			inputElement = (
-				<StyledInput {...elementConfig} onChange={onChangeHanlder} />
-			)
+			inputElement = <StyledInput type={type} {...props} />
 	}
+
 	return (
 		<InputContainer>
 			<LabelInput>{label}</LabelInput>
 			{inputElement}
+
+			{error && touched && <StyledError>{error}</StyledError>}
 		</InputContainer>
 	)
 }

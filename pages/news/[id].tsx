@@ -39,8 +39,6 @@ type Params = {
 }
 
 export async function getStaticProps({ params }: Params) {
-	console.log(params.id)
-
 	const res = await fetch(`http://localhost:3001/news/${params.id}`)
 	const resData = await res.json()
 

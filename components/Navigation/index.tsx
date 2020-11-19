@@ -1,6 +1,6 @@
-import { useCallback } from "react"
+import { useState, useEffect, useContext, useCallback } from "react"
 import styled from "styled-components"
-import { useGlobal } from "../../store"
+import { UserContext } from "../../common/UserContext"
 import NavigationItem from "../NavigationItem"
 
 const Nav = styled.nav`
@@ -15,17 +15,23 @@ const RightNav = styled.div`
 `
 
 const Navigation: React.FC = () => {
-	const [state, actions] = useGlobal()
-	const logoutHandler = useCallback(() => {
-		actions.logout()
+	const [isClient, setIsClient] = useState(false)
+	const { user, logout } = useContext(UserContext)
+
+	useEffect(() => {
+		if (typeof window !== "undefined") setIsClient(true)
 	}, [])
 
-	const isAuthenticated = !!state.user
+	const logoutHandler = useCallback(() => {
+		logout()
+	}, [])
+
+	const isAuthenticated = !!user && isClient
 
 	return (
 		<Nav>
 			<div>
-				<NavigationItem href="/">new</NavigationItem>
+				<NavigationItem href="/">news</NavigationItem>
 
 				{isAuthenticated && (
 					<NavigationItem href="/addNews">Add new</NavigationItem>

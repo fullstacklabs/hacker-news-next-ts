@@ -1,9 +1,11 @@
-import { useRouter } from "next/router"
+import { useState, useContext } from "react"
 import { Formik } from "formik"
 import styled from "styled-components"
-import { useGlobal } from "../../store"
-import { StyledInput, StyledButton, StyledError } from "../../components/UI"
+import { UserContext } from "../../common/UserContext"
+import Input from "../../components/UI/input"
+import { StyledButton, StyledError } from "../../components/UI"
 import Spinner from "../../components/UI/Spinner"
+import { useRequireNoUser, useAPI } from "../../common/util"
 
 type FormErrors = {
 	email?: string
@@ -14,15 +16,15 @@ const StyledForm = styled.form`
 	padding: 30px;
 `
 
-const Register: React.FC = () => {
-	const router = useRouter()
-	const [state, actions] = useGlobal()
+const LoginPage: React.FC = () => {
+	const [verificationError, setVerificationError] = useState<string | null>(
+		null
+	)
+	const { user, login } = useContext(UserContext)
+	useRequireNoUser(user)
+	const { loading, error, callAPI } = useAPI()
 
-	const { userLoading, userError } = state
-
-	if (state.user) {
-		router.push("/")
-	}
+	if (user) return <StyledError>You are already logged in</StyledError>
 
 	return (
 		<Formik
@@ -40,8 +42,18 @@ const Register: React.FC = () => {
 				return errors
 			}}
 			onSubmit={async (values, { setSubmitting, resetForm }) => {
-				await actions.login(values)
-				resetForm()
+				setVerificationError(null)
+				const res = await callAPI(`/user?email=${values.email}`)
+
+				if (res && res.length) {
+					let resUser = res[0]
+
+					if (resUser.password === values.password) {
+						resetForm()
+						login(resUser)
+					} else setVerificationError("Invalid login. Please try again.")
+				} else setVerificationError("Invalid login. Please try again.")
+
 				setSubmitting(false)
 			}}
 		>
@@ -55,34 +67,33 @@ const Register: React.FC = () => {
 				isSubmitting,
 			}) => (
 				<StyledForm onSubmit={handleSubmit}>
-					{userLoading && <Spinner />}
+					{loading && <Spinner />}
 
-					<StyledInput
+					<Input
 						type="email"
 						name="email"
 						onChange={handleChange}
 						onBlur={handleBlur}
 						value={values.email}
 						placeholder="Email"
+						error={errors.email}
+						touched={!!touched.email}
 					/>
 
-					<StyledError>
-						{errors.email && touched.email && errors.email}
-					</StyledError>
-
-					<StyledInput
+					<Input
 						type="password"
 						name="password"
 						onChange={handleChange}
 						onBlur={handleBlur}
 						value={values.password}
 						placeholder="Password"
+						error={errors.password}
+						touched={!!touched.password}
 					/>
 
-					<StyledError>
-						{errors.password && touched.password && errors.password}
-					</StyledError>
-					{userError && <StyledError>{userError}</StyledError>}
+					{error && <StyledError>{error}</StyledError>}
+
+					{verificationError && <StyledError>{verificationError}</StyledError>}
 
 					<StyledButton type="submit" disabled={isSubmitting}>
 						Login
@@ -93,4 +104,4 @@ const Register: React.FC = () => {
 	)
 }
 
-export default Register
+export default LoginPage
