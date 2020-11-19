@@ -31,7 +31,7 @@ const Input: React.FC<
 
 	return (
 		<InputContainer>
-			<LabelInput>{label}</LabelInput>
+			{label && <LabelInput>{label}</LabelInput>}
 			{inputElement}
 
 			{error && touched && <StyledError>{error}</StyledError>}

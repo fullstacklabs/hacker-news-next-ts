@@ -1,11 +1,14 @@
 import { useContext } from "react"
 import { useRouter } from "next/router"
 import { Formik } from "formik"
-import styled from "styled-components"
 import { UserContext } from "../../common/UserContext"
 import Input from "../../components/UI/input"
-import { StyledButton, StyledError } from "../../components/UI"
-import Spinner from "../../components/UI/Spinner"
+import {
+	StyledLoading,
+	StyledForm,
+	StyledButton,
+	StyledError,
+} from "../../components/UI"
 import { useRequireNoUser, useAPI } from "../../common/util"
 
 type FormErrors = {
@@ -15,10 +18,6 @@ type FormErrors = {
 	password?: string
 	passwordConfirm?: string
 }
-
-const StyledForm = styled.form`
-	padding: 30px;
-`
 
 const Register: React.FC = () => {
 	const router = useRouter()
@@ -84,7 +83,7 @@ const Register: React.FC = () => {
 				isSubmitting,
 			}) => (
 				<StyledForm onSubmit={handleSubmit}>
-					{loading && <Spinner />}
+					{loading && <StyledLoading />}
 
 					<Input
 						type="text"
