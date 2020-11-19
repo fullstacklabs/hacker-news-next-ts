@@ -4,18 +4,11 @@ import Adapter from "enzyme-adapter-react-16"
 
 import AddNews from "./"
 
-const state = {
-	by: "",
-	title: "",
-	url: "",
-	loading: false,
-}
-
 configure({ adapter: new Adapter() })
 
 describe("<AddNews />", () => {
 	it("renders without crashing", () => {
-		const wrapper = shallow(<AddNews {...state} />)
+		const wrapper = shallow(<AddNews />)
 		expect(wrapper).toHaveLength(1)
 	})
 })

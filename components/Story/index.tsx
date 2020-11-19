@@ -1,9 +1,9 @@
-import React, { useCallback } from "react"
-import { useGlobal } from "../../store"
-import { News } from "../../common/types"
-import { mapTime } from "../../common/util"
+import React, { useState, useContext, useCallback } from "react"
 import Link from "next/link"
 import styled from "styled-components"
+import { UserContext } from "../../common/UserContext"
+import { News } from "../../common/types"
+import { mapTime, useAPI } from "../../common/util"
 import UpVote from "../../components/UpVote"
 
 interface Props {
@@ -55,13 +55,29 @@ const Details = styled.div`
 	}
 `
 
-const Story: React.FC<Props> = ({ news, rank }) => {
-	const [, actions] = useGlobal()
+const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
+	const [news, setNews] = useState(propsNews)
+	const { user } = useContext(UserContext)
+	const { callAPI } = useAPI()
 	const { title, url, by, creationDate, score, descendants, id } = news
 
-	const likeToggleHandler = useCallback(() => {
-		actions.toggleNewsLike(news.id)
-	}, [])
+	const likeToggleHandler = useCallback(async () => {
+		if (!user) return
+
+		const likes = [...news.likes]
+
+		const userLikeIndex = likes.findIndex((like) => like.userId === user.id)
+
+		if (userLikeIndex === -1) likes.push({ userId: user.id })
+		else likes.splice(userLikeIndex, 1)
+
+		const json = await callAPI(`/news/${id}`, {
+			method: "patch",
+			body: JSON.stringify({ likes }),
+		})
+
+		console.log(json)
+	}, [news])
 
 	let titleLink: React.ReactNode = title
 	let hostname = ""

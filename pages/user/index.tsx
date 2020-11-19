@@ -1,10 +1,14 @@
-import { useState, useCallback } from "react"
-import { useRouter } from "next/router"
+import { useState, useContext } from "react"
+import { GetServerSideProps } from "next"
 import { Formik } from "formik"
 import styled from "styled-components"
-import { useGlobal } from "../../store"
-import { StyledInput, StyledButton, StyledError } from "../../components/UI"
+import cookies from "next-cookies"
+import { UserContext } from "../../common/UserContext"
+import { useRequireUser, useAPI } from "../../common/util"
+import Input from "../../components/UI/input"
+import { StyledButton, StyledError } from "../../components/UI"
 import Spinner from "../../components/UI/Spinner"
+import { User } from "../../common/types"
 
 type FormErrors = {
 	name?: string
@@ -12,6 +16,10 @@ type FormErrors = {
 	email?: string
 	password?: string
 	passwordConfirm?: string
+}
+
+interface Props {
+	serverUser: User | string
 }
 
 const StyledUser = styled.div`
@@ -22,23 +30,20 @@ const StyledForm = styled.form`
 	padding: 30px;
 `
 
-const User: React.FC = () => {
+const UserPage: React.FC<Props> = ({ serverUser }) => {
 	const [isEditing, setIsEditing] = useState(false)
-	const router = useRouter()
-	const [state, actions] = useGlobal()
+	const { user: clientUser, login } = useContext(UserContext)
+	const typedServerUser = typeof serverUser !== "string" ? serverUser : null
+	const user = clientUser || typedServerUser
+	useRequireUser(user)
+	const { loading, error, callAPI } = useAPI({
+		method: "patch",
+	})
 
-	const { userLoading, userError } = state
+	const editClickHandler = () => setIsEditing(!isEditing)
 
-	const editClickHandler = useCallback(() => setIsEditing(!isEditing), [
-		isEditing,
-	])
-
-	if (!state.user && typeof window !== "undefined") {
-		router.push("/")
-	}
-
-	if (state.user !== null && state.user.id) {
-		const { name, title, email, password, id } = state.user
+	if (user) {
+		const { name, title, email, password } = user
 
 		if (!isEditing)
 			return (
@@ -81,15 +86,23 @@ const User: React.FC = () => {
 							return errors
 						}}
 						onSubmit={async (values, { setSubmitting, resetForm }) => {
-							const user = {
+							const updatedUser = {
 								...values,
 								passwordConfirm: undefined,
 							}
 
-							await actions.editUser(user, id)
-							resetForm()
+							const json = await callAPI(`/user/${user.id}`, {
+								method: "PATCH",
+								body: JSON.stringify(updatedUser),
+							})
+
+							if (json) {
+								login(json)
+								resetForm()
+								setIsEditing(false)
+							}
+
 							setSubmitting(false)
-							setIsEditing(false)
 						}}
 					>
 						{({
@@ -102,76 +115,64 @@ const User: React.FC = () => {
 							isSubmitting,
 						}) => (
 							<StyledForm onSubmit={handleSubmit}>
-								{userLoading && <Spinner />}
+								{loading && <Spinner />}
 
-								<StyledInput
+								<Input
 									type="text"
 									name="name"
 									onChange={handleChange}
 									onBlur={handleBlur}
 									value={values.name}
 									placeholder="Name"
+									touched={!!touched.name}
+									error={errors.name}
 								/>
 
-								<StyledError>
-									{errors.name && touched.name && errors.name}
-								</StyledError>
-
-								<StyledInput
+								<Input
 									type="text"
 									name="title"
 									onChange={handleChange}
 									onBlur={handleBlur}
 									value={values.title}
 									placeholder="Title"
+									touched={!!touched.title}
+									error={errors.title}
 								/>
 
-								<StyledError>
-									{errors.title && touched.title && errors.title}
-								</StyledError>
-
-								<StyledInput
+								<Input
 									type="email"
 									name="email"
 									onChange={handleChange}
 									onBlur={handleBlur}
 									value={values.email}
 									placeholder="Email"
+									touched={!!touched.email}
+									error={errors.email}
 								/>
 
-								<StyledError>
-									{errors.email && touched.email && errors.email}
-								</StyledError>
-
-								<StyledInput
+								<Input
 									type="password"
 									name="password"
 									onChange={handleChange}
 									onBlur={handleBlur}
 									value={values.password}
 									placeholder="Password"
+									touched={!!touched.password}
+									error={errors.password}
 								/>
 
-								<StyledError>
-									{errors.password && touched.password && errors.password}
-								</StyledError>
-
-								<StyledInput
+								<Input
 									type="password"
 									name="passwordConfirm"
 									onChange={handleChange}
 									onBlur={handleBlur}
 									value={values.passwordConfirm}
 									placeholder="Password Confirmation"
+									touched={!!touched.passwordConfirm}
+									error={errors.passwordConfirm}
 								/>
 
-								<StyledError>
-									{errors.passwordConfirm &&
-										touched.passwordConfirm &&
-										errors.passwordConfirm}
-								</StyledError>
-
-								{userError && <StyledError>{userError}</StyledError>}
+								{error && <StyledError>{error}</StyledError>}
 
 								<StyledButton type="submit" disabled={isSubmitting}>
 									Submit
@@ -193,4 +194,12 @@ const User: React.FC = () => {
 	}
 }
 
-export default User
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+	return {
+		props: {
+			serverUser: cookies(ctx).user || "",
+		},
+	}
+}
+
+export default UserPage

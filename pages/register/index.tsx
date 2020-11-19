@@ -1,9 +1,12 @@
+import { useContext } from "react"
 import { useRouter } from "next/router"
 import { Formik } from "formik"
 import styled from "styled-components"
-import { useGlobal } from "../../store"
-import { StyledInput, StyledButton, StyledError } from "../../components/UI"
+import { UserContext } from "../../common/UserContext"
+import Input from "../../components/UI/input"
+import { StyledButton, StyledError } from "../../components/UI"
 import Spinner from "../../components/UI/Spinner"
+import { useRequireNoUser, useAPI } from "../../common/util"
 
 type FormErrors = {
 	name?: string
@@ -19,13 +22,13 @@ const StyledForm = styled.form`
 
 const Register: React.FC = () => {
 	const router = useRouter()
-	const [state, actions] = useGlobal()
+	const { user, login } = useContext(UserContext)
+	useRequireNoUser(user)
+	const { loading, error, callAPI } = useAPI({
+		method: "post",
+	})
 
-	const { userLoading, userError } = state
-
-	if (state.user) {
-		router.push("/")
-	}
+	if (user) return <StyledError>You are already logged in</StyledError>
 
 	return (
 		<Formik
@@ -60,8 +63,14 @@ const Register: React.FC = () => {
 					passwordConfirm: undefined,
 				}
 
-				await actions.register(user)
-				resetForm()
+				const json = await callAPI("/user", { body: JSON.stringify(user) })
+
+				if (json) {
+					login(json)
+					resetForm()
+					router.push("/")
+				}
+
 				setSubmitting(false)
 			}}
 		>
@@ -75,76 +84,64 @@ const Register: React.FC = () => {
 				isSubmitting,
 			}) => (
 				<StyledForm onSubmit={handleSubmit}>
-					{userLoading && <Spinner />}
+					{loading && <Spinner />}
 
-					<StyledInput
+					<Input
 						type="text"
 						name="name"
 						onChange={handleChange}
 						onBlur={handleBlur}
 						value={values.name}
 						placeholder="Name"
+						touched={!!touched.name}
+						error={errors.name}
 					/>
 
-					<StyledError>
-						{errors.name && touched.name && errors.name}
-					</StyledError>
-
-					<StyledInput
+					<Input
 						type="text"
 						name="title"
 						onChange={handleChange}
 						onBlur={handleBlur}
 						value={values.title}
 						placeholder="Title"
+						touched={!!touched.title}
+						error={errors.title}
 					/>
 
-					<StyledError>
-						{errors.title && touched.title && errors.title}
-					</StyledError>
-
-					<StyledInput
+					<Input
 						type="email"
 						name="email"
 						onChange={handleChange}
 						onBlur={handleBlur}
 						value={values.email}
 						placeholder="Email"
+						touched={!!touched.email}
+						error={errors.email}
 					/>
 
-					<StyledError>
-						{errors.email && touched.email && errors.email}
-					</StyledError>
-
-					<StyledInput
+					<Input
 						type="password"
 						name="password"
 						onChange={handleChange}
 						onBlur={handleBlur}
 						value={values.password}
 						placeholder="Password"
+						touched={!!touched.password}
+						error={errors.password}
 					/>
 
-					<StyledError>
-						{errors.password && touched.password && errors.password}
-					</StyledError>
-
-					<StyledInput
+					<Input
 						type="password"
 						name="passwordConfirm"
 						onChange={handleChange}
 						onBlur={handleBlur}
 						value={values.passwordConfirm}
 						placeholder="Password Confirmation"
+						touched={!!touched.passwordConfirm}
+						error={errors.passwordConfirm}
 					/>
 
-					<StyledError>
-						{errors.passwordConfirm &&
-							touched.passwordConfirm &&
-							errors.passwordConfirm}
-					</StyledError>
-
-					{userError && <StyledError>{userError}</StyledError>}
+					{error && <StyledError>{error}</StyledError>}
 
 					<StyledButton type="submit" disabled={isSubmitting}>
 						Submit

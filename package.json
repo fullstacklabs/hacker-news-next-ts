@@ -10,8 +10,11 @@
 		"test:ci": "jest --ci"
 	},
 	"dependencies": {
+		"@types/js-cookie": "^2.2.6",
 		"formik": "^2.2.5",
+		"js-cookie": "^2.2.1",
 		"next": "^9.5.5",
+		"next-cookies": "^2.0.3",
 		"react": "^16.14.0",
 		"react-dom": "^16.14.0",
 		"react-infinite-scroll-component": "^5.1.0",

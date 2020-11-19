@@ -1,4 +1,3 @@
-import { NONAME } from "dns"
 import Link from "next/link"
 import styled from "styled-components"
 import Navigation from "../Navigation"

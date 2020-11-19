@@ -1,4 +1,4 @@
-import { Store } from "use-global-hook"
+import { InputHTMLAttributes, TextareaHTMLAttributes } from "react"
 
 export interface CountDisplay {
 	prev: number
@@ -8,7 +8,7 @@ export interface CountDisplay {
 export interface InitialState {
 	totalNews: number[]
 	currNews: number[]
-	error: string
+	error: string | null
 	countDisplay: CountDisplay
 	countKidsDisplay: CountDisplay
 	hasMore: boolean
@@ -17,8 +17,6 @@ export interface InitialState {
 	newsPage: News | null
 	loading: boolean
 	user: User | null
-	userLoading: boolean
-	userError: string | null
 }
 
 export interface MyAssociatedActions {
@@ -26,17 +24,12 @@ export interface MyAssociatedActions {
 	getMoreNews: () => Promise<void>
 	// getCommentsById: (id: number[]) => Promise<void>
 	getNewsById: (id: number) => Promise<void>
-	addNews: (
-		newsData: Omit<
-			News,
-			"id" | "kids" | "score" | "time" | "type" | "descendants" | "userId"
-		>,
-		userId: number
-	) => Promise<void>
+	addNews: (newsData: NewsSubmit, user: User) => Promise<void>
+	editNews: (newsData: NewsSubmit, originalNews: News) => Promise<boolean>
 	toggleNewsLike: (newsId: number) => void
 	login: (login: Login) => Promise<void>
-	register: (user: User) => Promise<void>
-	editUser: (user: User, id: number) => Promise<void>
+	register: (user: UserSumbit) => Promise<boolean>
+	editUser: (user: UserSumbit, id: number) => Promise<void>
 	checkAuth: () => void
 	logout: () => void
 }
@@ -60,6 +53,21 @@ export interface News {
 	creationDate?: string
 }
 
+export interface NewsSubmit
+	extends Omit<
+		News,
+		| "kids"
+		| "score"
+		| "time"
+		| "type"
+		| "descendants"
+		| "userId"
+		| "creationDate"
+		| "by"
+		| "id"
+		| "likes"
+	> {}
+
 export interface Comment {
 	by: string
 	deleted: boolean | null
@@ -71,10 +79,6 @@ export interface Comment {
 	creationDate: string
 }
 
-export interface ElementType {
-	type?: string
-	placeholder?: string
-}
 export interface Login {
 	email: string
 	password: string
@@ -85,6 +89,7 @@ export interface User {
 	name: string
 	title: string
 	email: string
-	password?: string
-	passwordConfirm?: string
+	password: string
 }
+
+export interface UserSumbit extends Omit<User, "id"> {}
