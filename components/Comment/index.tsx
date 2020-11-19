@@ -1,12 +1,12 @@
-import React from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import styled from "styled-components"
 import UpVote from "../UpVote"
+import AddComment from "../AddComment"
 import { mapTime } from "../../common/util"
 import { Comment as CommentType } from "../../common/types"
-import { FunctionComponent, useEffect, useState } from "react"
+import { StyledError } from "../UI"
 
 interface CommentTypeComponent {
-	comment?: CommentType
 	id: number
 }
 
@@ -21,7 +21,7 @@ const Header = styled.div`
 	color: ${({ theme }) => theme.colors.secondary};
 `
 
-const Body = styled.div`
+const Inner = styled.div`
 	margin: 5px 0 5px 14px;
 	font-size: 0.8rem;
 `
@@ -30,40 +30,69 @@ const ToggleButton = styled.span`
 	cursor: pointer;
 `
 
-const Comment: FunctionComponent<CommentTypeComponent> = ({ id, comment }) => {
-	const [isExpanded, setIsExpanded] = useState(true)
-	const [_comment, setComment] = useState<CommentType>()
+const StyledReply = styled.div`
+	margin-top: 5px;
+	text-decoration: underline;
+	font-size: 0.8em;
+	cursor: pointer;
+`
 
-	const expandToggleClick = () => {
-		setIsExpanded(!isExpanded)
-	}
+const Comment: React.FC<CommentTypeComponent> = ({ id }) => {
+	const [isExpanded, setIsExpanded] = useState(true)
+	const [isReplying, setIsReplying] = useState(false)
+	const [comment, setComment] = useState<CommentType>()
+	const [error, setError] = useState<string | null>(null)
+	const [isValid, setIsValid] = useState(true)
+
+	const expandToggleClick = useCallback(() => {
+		setIsExpanded((prev) => !prev)
+	}, [])
+
+	const replyToggleClick = useCallback(() => {
+		setIsReplying((prev) => !prev)
+	}, [])
+
+	const onReply = useCallback(() => setIsValid(false), [])
 
 	useEffect(() => {
-		fetch(`http://localhost:3001/news/${id}`)
+		fetch(`http://localhost:3001/comments/${id}`)
 			.then((res) => res.json())
-			.then((data) => setComment({ ...comment, ...data }))
+			.then((data) => setComment(data))
+			.catch((error) => setError(error.toString()))
 	}, [id])
 
-	const toggleButton = (
-		<ToggleButton onClick={expandToggleClick}>
-			[{isExpanded ? "-" : _comment?.kids?.length || 0}]
-		</ToggleButton>
-	)
+	useEffect(() => {
+		if (!isValid) {
+			fetch(`http://localhost:3001/comments/${id}`)
+				.then((res) => res.json())
+				.then((json) => {
+					setComment(json)
+					setIsValid(true)
+				})
+				.catch((error) => setError(error.toString()))
+		}
+	}, [isValid])
+
+	if (error) return <StyledError>{error}</StyledError>
+
+	if (!comment) return <p>Loading...</p>
 
 	const header = (
 		<>
-			{_comment?.by} {mapTime(_comment ? _comment.creationDate : "")}
+			{comment.by} {mapTime(comment.creationDate)}
 			&nbsp;
-			{toggleButton}
+			{comment && (
+				<ToggleButton onClick={expandToggleClick}>
+					{isExpanded ? "-" : (comment.kids && comment.kids.length) || 0}
+				</ToggleButton>
+			)}
 		</>
 	)
 
 	const nestedComments =
-		_comment &&
-		_comment.kids &&
-		_comment.kids
-			.slice(0, 3)
-			.map((comment) => <Comment key={comment} id={comment} />)
+		comment.kids &&
+		comment.kids.slice(0, 3).map((kidID) => <Comment key={kidID} id={kidID} />)
+
 	return (
 		<StyledComment>
 			<Header>
@@ -71,7 +100,13 @@ const Comment: FunctionComponent<CommentTypeComponent> = ({ id, comment }) => {
 				{header}
 			</Header>
 			<div style={{ display: !isExpanded ? "none" : "block" }}>
-				<Body dangerouslySetInnerHTML={{ __html: _comment?.text || "" }} />
+				<Inner>
+					<div dangerouslySetInnerHTML={{ __html: comment.text }} />
+					<StyledReply onClick={replyToggleClick}>
+						{isReplying ? "close" : "reply"}
+					</StyledReply>
+					{isReplying && <AddComment id={id} onReply={onReply} isComment />}
+				</Inner>
 				{nestedComments}
 			</div>
 		</StyledComment>

@@ -35,6 +35,10 @@ export const StyledButton: StyledComponent<
 	}
 `
 
+export const StyledForm = styled.form`
+	padding: 30px;
+`
+
 export const Container = styled.div`
 	width: 100%;
 	padding-right: 15px;

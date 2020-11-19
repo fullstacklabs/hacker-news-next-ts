@@ -1,4 +1,4 @@
-import { FC, createContext, useState, useEffect } from "react"
+import React, { createContext, useState, useEffect } from "react"
 import { User } from "./types"
 import Cookies from "js-cookie"
 
@@ -14,7 +14,7 @@ const UserContext = createContext<UserContextValues>({
 	logout: () => {},
 })
 
-const UserContextProvider: FC = ({ children }) => {
+const UserContextProvider: React.FC = ({ children }) => {
 	const [user, setUser] = useState<null | User>(null)
 
 	useEffect(() => {

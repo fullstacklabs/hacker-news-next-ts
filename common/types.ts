@@ -75,7 +75,6 @@ export interface Comment {
 	kids?: number[]
 	parent: number
 	text: string
-	type: string
 	creationDate: string
 }
 

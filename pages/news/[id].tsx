@@ -1,11 +1,9 @@
-import React, { useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import styled from "styled-components"
-import { useGlobal } from "../../store"
-import { actions } from "../../actions"
+import AddComment from "../../components/AddComment"
 import Comments from "../../components/Comments"
 import Story from "../../components/Story"
 import { News as NewsType } from "../../common/types"
-import { useRouter } from "next/router"
 
 interface Props {
 	id: number
@@ -17,17 +15,36 @@ const StyledNews = styled.div`
 	padding: 10px;
 `
 
-const News: React.FC<Props> = ({ id, newsPage, error }) => {
+const NewsPage: React.FC<Props> = ({ id, newsPage, error }) => {
+	const [story, setStory] = useState(newsPage)
+	const [isValid, setIsValid] = useState(true)
+	const [clientError, setClientError] = useState<null | string>(null)
+
+	const onReply = useCallback(() => setIsValid(false), [])
+
+	useEffect(() => {
+		if (!isValid) {
+			fetch(`http://localhost:3001/news/${id}`)
+				.then((res) => res.json())
+				.then((json) => {
+					setStory(json)
+					setIsValid(true)
+				})
+				.catch((error) => setClientError(error.toString()))
+		}
+	}, [isValid])
+
 	if (error) return <StyledNews>{error}</StyledNews>
+
+	if (clientError) return <StyledNews>{clientError}</StyledNews>
 
 	if (!newsPage) return <StyledNews>Loading...</StyledNews>
 
-	const { kids } = newsPage
-
 	return (
 		<React.Fragment>
-			<Story news={newsPage} />
-			<Comments kids={kids} />
+			<Story news={story} />
+			<AddComment id={id} onReply={onReply} />
+			<Comments kids={story.kids} />
 		</React.Fragment>
 	)
 }
@@ -65,4 +82,4 @@ export async function getStaticPaths() {
 	}
 }
 
-export default News
+export default NewsPage

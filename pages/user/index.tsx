@@ -7,7 +7,6 @@ import { UserContext } from "../../common/UserContext"
 import { useRequireUser, useAPI } from "../../common/util"
 import Input from "../../components/UI/input"
 import { StyledButton, StyledError } from "../../components/UI"
-import Spinner from "../../components/UI/Spinner"
 import { User } from "../../common/types"
 
 type FormErrors = {
@@ -37,7 +36,7 @@ const UserPage: React.FC<Props> = ({ serverUser }) => {
 	const user = clientUser || typedServerUser
 	useRequireUser(user)
 	const { loading, error, callAPI } = useAPI({
-		method: "patch",
+		method: "PATCH",
 	})
 
 	const editClickHandler = () => setIsEditing(!isEditing)
@@ -92,7 +91,6 @@ const UserPage: React.FC<Props> = ({ serverUser }) => {
 							}
 
 							const json = await callAPI(`/user/${user.id}`, {
-								method: "PATCH",
 								body: JSON.stringify(updatedUser),
 							})
 
@@ -115,7 +113,7 @@ const UserPage: React.FC<Props> = ({ serverUser }) => {
 							isSubmitting,
 						}) => (
 							<StyledForm onSubmit={handleSubmit}>
-								{loading && <Spinner />}
+								{loading && <StyledLoading />}
 
 								<Input
 									type="text"

@@ -4,7 +4,6 @@ import { Formik } from "formik"
 import styled from "styled-components"
 import { UserContext } from "../../../common/UserContext"
 import { StyledInput, StyledButton, StyledError } from "../../../components/UI"
-import Spinner from "../../../components/UI/Spinner"
 import { News } from "../../../common/types"
 import { useAPI } from "../../../common/util"
 
@@ -78,7 +77,7 @@ const EditNewsPage: React.FC<Props> = ({ id, news, error }) => {
 				isSubmitting,
 			}) => (
 				<StyledForm onSubmit={handleSubmit}>
-					{isSubmitting && <Spinner />}
+					{isSubmitting && <StyledLoading />}
 
 					<StyledInput
 						type="text"

@@ -3,8 +3,7 @@ import { Formik } from "formik"
 import styled from "styled-components"
 import { UserContext } from "../../common/UserContext"
 import Input from "../../components/UI/input"
-import { StyledButton, StyledError } from "../../components/UI"
-import Spinner from "../../components/UI/Spinner"
+import { StyledLoading, StyledButton, StyledError } from "../../components/UI"
 import { useRequireNoUser, useAPI } from "../../common/util"
 
 type FormErrors = {
@@ -67,7 +66,7 @@ const LoginPage: React.FC = () => {
 				isSubmitting,
 			}) => (
 				<StyledForm onSubmit={handleSubmit}>
-					{loading && <Spinner />}
+					{loading && <StyledLoading />}
 
 					<Input
 						type="email"

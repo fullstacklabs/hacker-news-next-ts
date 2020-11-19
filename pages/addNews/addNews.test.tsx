@@ -8,7 +8,7 @@ configure({ adapter: new Adapter() })
 
 describe("<AddNews />", () => {
 	it("renders without crashing", () => {
-		const wrapper = shallow(<AddNews />)
+		const wrapper = shallow(<AddNews serverUser={""} />)
 		expect(wrapper).toHaveLength(1)
 	})
 })
