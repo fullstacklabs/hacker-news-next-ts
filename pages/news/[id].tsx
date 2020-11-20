@@ -24,7 +24,7 @@ const NewsPage: React.FC<Props> = ({ id, newsPage, error }) => {
 
 	const onReply = useCallback(() => setIsValid(false), [])
 
-	const onCommentHandler = useCallback(() => {
+	const onCommentChangeHandler = useCallback(() => {
 		setIsValid(false)
 	}, [])
 
@@ -49,7 +49,7 @@ const NewsPage: React.FC<Props> = ({ id, newsPage, error }) => {
 		<>
 			<Story news={story} />
 			<AddComment id={id} onReply={onReply} />
-			<Comments onComment={onCommentHandler} kids={story.kids} />
+			<Comments onCommentChange={onCommentChangeHandler} kids={story.kids} />
 		</>
 	)
 }

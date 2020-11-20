@@ -5,7 +5,7 @@ import { UserContext } from "../../common/UserContext"
 import UpVote from "../UpVote"
 import AddComment from "../AddComment"
 import EditComment from "../EditComment"
-import { mapTime } from "../../common/util"
+import { mapTime, useAPI } from "../../common/util"
 import { Comment as CommentType } from "../../common/types"
 import { StyledError } from "../UI"
 
@@ -46,17 +46,24 @@ const StyledUserAction = styled.div`
 
 interface Props {
 	id: number
-	onComment: () => void
+	onCommentChange: () => void
 }
 
-const Comment: React.FC<Props> = ({ id, onComment }) => {
+const Comment: React.FC<Props> = ({ id, onCommentChange }) => {
 	const [isExpanded, setIsExpanded] = useState(true)
 	const [isReplying, setIsReplying] = useState(false)
 	const [isEditing, setIsEditing] = useState(false)
 	const { user } = useContext(UserContext)
 	const [comment, setComment] = useState<CommentType>()
-	const [error, setError] = useState<string | null>(null)
 	const [isValid, setIsValid] = useState(true)
+	const { loading, error, callAPI } = useAPI()
+
+	const onChange = useCallback(() => {
+		setIsValid(false)
+		setIsReplying(false)
+		setIsEditing(false)
+		onCommentChange()
+	}, [])
 
 	const expandToggleClick = useCallback(() => {
 		setIsExpanded((prev) => !prev)
@@ -70,35 +77,37 @@ const Comment: React.FC<Props> = ({ id, onComment }) => {
 		setIsEditing((prev) => !prev)
 	}, [])
 
-	const onChange = useCallback(() => {
-		setIsValid(false)
-		setIsReplying(false)
-		setIsEditing(false)
-		onComment()
+	const deleteClick = useCallback(() => {
+		if (confirm("Are you sure you want to delete?")) {
+			callAPI(`/comments/${id}`, {
+				method: "PATCH",
+				body: JSON.stringify({
+					text: "<em>This comment has been removed</em>",
+					userId: null,
+				}),
+			}).then(() => {
+				onCommentChange()
+				setIsValid(false)
+			})
+		}
 	}, [])
 
 	useEffect(() => {
-		fetch(`http://localhost:3001/comments/${id}`)
-			.then((res) => res.json())
-			.then((data) => setComment(data))
-			.catch((error) => setError(error.toString()))
+		callAPI(`/comments/${id}`).then((json) => setComment(json))
 	}, [id])
 
 	useEffect(() => {
 		if (!isValid) {
-			fetch(`http://localhost:3001/comments/${id}`)
-				.then((res) => res.json())
-				.then((json) => {
-					setComment(json)
-					setIsValid(true)
-				})
-				.catch((error) => setError(error.toString()))
+			callAPI(`/comments/${id}`).then((json) => {
+				setComment(json)
+				setIsValid(true)
+			})
 		}
 	}, [isValid])
 
 	if (error) return <StyledError>{error}</StyledError>
 
-	if (!comment) return <p>Loading...</p>
+	if (!comment || loading) return <p>Loading...</p>
 
 	const header = (
 		<>
@@ -120,7 +129,9 @@ const Comment: React.FC<Props> = ({ id, onComment }) => {
 		comment.kids &&
 		comment.kids
 			.slice(0, 3)
-			.map((kidID) => <Comment key={kidID} id={kidID} onComment={onComment} />)
+			.map((kidID) => (
+				<Comment key={kidID} id={kidID} onCommentChange={onCommentChange} />
+			))
 
 	return (
 		<StyledComment>
@@ -143,6 +154,11 @@ const Comment: React.FC<Props> = ({ id, onComment }) => {
 							{!isReplying && comment.userId === user.id && (
 								<StyledUserAction onClick={editToggleClick}>
 									{isEditing ? "cancel" : "edit"}
+								</StyledUserAction>
+							)}
+							{!isEditing && !isReplying && comment.userId === user.id && (
+								<StyledUserAction onClick={deleteClick}>
+									delete
 								</StyledUserAction>
 							)}
 						</StyledUserActions>
