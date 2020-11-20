@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from "react"
+import React, { useState, useEffect, useContext, useCallback } from "react"
 import Link from "next/link"
 import styled from "styled-components"
 import { UserContext } from "../../common/UserContext"
@@ -59,9 +59,9 @@ const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
 	const [news, setNews] = useState(propsNews)
 	const { user } = useContext(UserContext)
 	const { callAPI } = useAPI()
-	const { title, url, by, creationDate, score, descendants, id } = news
+	const { title, url, by, creationDate, likes, kids, id } = news
 
-	const likeToggleHandler = useCallback(async () => {
+	const likeToggleHandler = useCallback(() => {
 		if (!user) return
 
 		const likes = [...news.likes]
@@ -71,13 +71,17 @@ const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
 		if (userLikeIndex === -1) likes.push({ userId: user.id })
 		else likes.splice(userLikeIndex, 1)
 
-		const json = await callAPI(`/news/${id}`, {
-			method: "patch",
+		callAPI(`/news/${id}`, {
+			method: "PATCH",
 			body: JSON.stringify({ likes }),
 		})
+			.then((json) => setNews(json))
+			.catch((error) => console.error(error))
+	}, [user, news])
 
-		console.log(json)
-	}, [news])
+	useEffect(() => {
+		setNews(propsNews)
+	}, [propsNews])
 
 	let titleLink: React.ReactNode = title
 	let hostname = ""
@@ -107,15 +111,18 @@ const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
 			</Header>
 			<Details>
 				<Link href={`/news/${id}`}>
-					<a>{score} points</a>
+					<a>{likes.length} points</a>
 				</Link>
 				&nbsp;| by {by} | {creationDate && mapTime(creationDate)} |&nbsp;
 				<Link href={`/news/${id}`}>
-					<a>{descendants} comments</a>
+					<a>{kids.length} comments</a>
 				</Link>
 			</Details>
 		</StyledNews>
 	)
 }
 
-export default React.memo(Story)
+export default React.memo(
+	Story,
+	(prev, next) => JSON.stringify(prev.news) === JSON.stringify(next.news)
+)

@@ -12,7 +12,7 @@ const initialProps: News = {
 	by: "roberth",
 	id: 1234,
 	kids: [12, 212, 32],
-	score: 874,
+	likes: [1],
 	time: 1605032027,
 	title: "this is a test title",
 	url: "https://www.apple.com/apple-events/event-stream/?2020",

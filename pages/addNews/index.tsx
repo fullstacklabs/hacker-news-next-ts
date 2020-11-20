@@ -71,6 +71,7 @@ const AddNewsPage: React.FC<Props> = ({ serverUser }) => {
 							by: user.name,
 							type: "story",
 							user: user.id,
+							likes: [],
 						}
 
 						if (

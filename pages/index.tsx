@@ -13,7 +13,7 @@ const Page: NextPage<Props> = ({ stories }) => {
 		<div>
 			{stories &&
 				stories.map((item, index) => (
-					<Story key={index} news={item} rank={index + 1} />
+					<Story key={item.id} news={item} rank={index + 1} />
 				))}
 		</div>
 	)
