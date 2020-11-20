@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext, useCallback } from "react"
+import Link from "next/link"
 import styled from "styled-components"
 import { UserContext } from "../../common/UserContext"
 import UpVote from "../UpVote"
@@ -7,10 +8,6 @@ import EditComment from "../EditComment"
 import { mapTime } from "../../common/util"
 import { Comment as CommentType } from "../../common/types"
 import { StyledError } from "../UI"
-
-interface CommentTypeComponent {
-	id: number
-}
 
 const StyledComment = styled.div`
 	padding: 10px;
@@ -105,7 +102,11 @@ const Comment: React.FC<Props> = ({ id, onComment }) => {
 
 	const header = (
 		<>
-			{comment.by} {mapTime(comment.creationDate)}
+			<Link href={`/user/${comment.userId}`}>
+				<a>{comment.by}</a>
+			</Link>
+			&nbsp;
+			{mapTime(comment.creationDate)}
 			&nbsp;
 			{comment && (
 				<ToggleButton onClick={expandToggleClick}>

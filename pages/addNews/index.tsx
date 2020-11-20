@@ -70,7 +70,7 @@ const AddNewsPage: React.FC<Props> = ({ serverUser }) => {
 							title,
 							by: user.name,
 							type: "story",
-							user: user.id,
+							userId: user.id,
 							likes: [],
 						}
 
