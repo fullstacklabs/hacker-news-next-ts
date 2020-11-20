@@ -41,7 +41,7 @@ const Navigation: React.FC = () => {
 			<RightNav>
 				{isAuthenticated && (
 					<>
-						<NavigationItem href="/user">profile</NavigationItem>
+						<NavigationItem href="/profile">profile</NavigationItem>
 						<NavigationItem onClick={logoutHandler}>logout</NavigationItem>
 					</>
 				)}

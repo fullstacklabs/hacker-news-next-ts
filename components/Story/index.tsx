@@ -59,7 +59,7 @@ const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
 	const [news, setNews] = useState(propsNews)
 	const { user } = useContext(UserContext)
 	const { callAPI } = useAPI()
-	const { title, url, by, creationDate, likes, kids, id } = news
+	const { title, url, by, creationDate, likes, kids, id, userId } = news
 
 	const likeToggleHandler = useCallback(() => {
 		if (!user) return
@@ -113,7 +113,11 @@ const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
 				<Link href={`/news/${id}`}>
 					<a>{likes.length} points</a>
 				</Link>
-				&nbsp;| by {by} | {creationDate && mapTime(creationDate)} |&nbsp;
+				&nbsp;| by&nbsp;
+				<Link href={`/user/${userId}`}>
+					<a>{by}</a>
+				</Link>
+				&nbsp;| {creationDate && mapTime(creationDate)} |&nbsp;
 				<Link href={`/news/${id}`}>
 					<a>{kids.length} comments</a>
 				</Link>

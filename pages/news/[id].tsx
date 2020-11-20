@@ -9,11 +9,11 @@ import { useAPI } from "../../common/util"
 interface Props {
 	id: number
 	newsPage: NewsType
-	error: boolean
+	error: null | string
 }
 
 const StyledNews = styled.div`
-	padding: 10px;
+	padding: 15px;
 `
 
 const NewsPage: React.FC<Props> = ({ id, newsPage, error }) => {
@@ -46,11 +46,11 @@ const NewsPage: React.FC<Props> = ({ id, newsPage, error }) => {
 	if (!newsPage) return <StyledNews>Loading...</StyledNews>
 
 	return (
-		<React.Fragment>
+		<>
 			<Story news={story} />
 			<AddComment id={id} onReply={onReply} />
 			<Comments onComment={onCommentHandler} kids={story.kids} />
-		</React.Fragment>
+		</>
 	)
 }
 
@@ -61,14 +61,21 @@ type Params = {
 }
 
 export async function getStaticProps({ params }: Params) {
-	const res = await fetch(`http://localhost:3001/news/${params.id}`)
-	const resData = await res.json()
+	let error = null
+	let newsPage
+
+	try {
+		const res = await fetch(`http://localhost:3001/news/${params.id}`)
+		newsPage = await res.json()
+	} catch (e) {
+		error = e.toString()
+	}
 
 	return {
 		props: {
 			id: parseInt(params.id, 10),
-			newsPage: resData,
-			error: false,
+			newsPage,
+			error,
 		},
 	}
 }
