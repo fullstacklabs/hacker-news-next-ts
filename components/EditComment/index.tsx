@@ -9,6 +9,7 @@ import {
 	StyledLoading,
 } from "../../components/UI"
 import { useAPI } from "../../common/util"
+import { Comment } from "../../common/types"
 
 type FormErrors = {
 	title?: string
@@ -16,30 +17,25 @@ type FormErrors = {
 }
 
 interface Props {
-	id: number
-	isComment?: boolean
-	onReply: () => void
+	comment: Comment
+	onEdit: () => void
 }
 
-interface isCommentProps {
-	isComment?: boolean
-}
-
-const CommentForm = styled.form<isCommentProps>`
-	display: ${(props) => (props.isComment ? "flex" : "block")};
-	padding: 5px ${(props) => (props.isComment ? "0" : "25px")};
+const CommentForm = styled.form`
+	display: flex;
+	padding: 5px 0;
 `
 
 const CommentTextArea = styled(StyledTextarea)`
 	margin: 0;
 `
 
-const SubmitButton = styled(StyledButton)<isCommentProps>`
-	margin-top: ${(props) => (props.isComment ? "0" : "5px")};
-	margin-left: ${(props) => (props.isComment ? "5px" : "0")};
+const SubmitButton = styled(StyledButton)`
+	margin-top: 0;
+	margin-left: 5px;
 `
 
-const AddCommment: React.FC<Props> = ({ id, isComment, onReply }) => {
+const EditCommment: React.FC<Props> = ({ comment, onEdit }) => {
 	const { loading, error, callAPI } = useAPI()
 	const { user } = useContext(UserContext)
 
@@ -48,7 +44,7 @@ const AddCommment: React.FC<Props> = ({ id, isComment, onReply }) => {
 	return (
 		<Formik
 			initialValues={{
-				text: "",
+				text: comment.text,
 			}}
 			validate={(values) => {
 				const errors: FormErrors = {}
@@ -59,32 +55,17 @@ const AddCommment: React.FC<Props> = ({ id, isComment, onReply }) => {
 			}}
 			onSubmit={async (values, { setSubmitting, resetForm }) => {
 				const commentValues = {
-					...values,
-					kids: [],
-					by: user.name,
-					userId: user.id,
-					creationDate: new Date().toISOString(),
+					text: values.text,
 				}
 
-				const commentJSON = await callAPI("/comments", {
-					method: "POST",
+				const commentJSON = await callAPI(`/comments/${comment.id}`, {
+					method: "PATCH",
 					body: JSON.stringify(commentValues),
 				})
 
-				const parentURL = isComment ? `/comments/${id}` : `/news/${id}`
-
 				if (commentJSON) {
-					const parentJSON = await callAPI(parentURL, { method: "GET" })
-
-					await callAPI(parentURL, {
-						method: "PATCH",
-						body: JSON.stringify({
-							kids: [...parentJSON.kids, commentJSON.id],
-						}),
-					})
-
 					resetForm()
-					onReply()
+					onEdit()
 				}
 
 				setSubmitting(false)
@@ -99,7 +80,7 @@ const AddCommment: React.FC<Props> = ({ id, isComment, onReply }) => {
 				handleSubmit,
 				isSubmitting,
 			}) => (
-				<CommentForm isComment={isComment} onSubmit={handleSubmit}>
+				<CommentForm onSubmit={handleSubmit}>
 					{loading && <StyledLoading />}
 
 					<CommentTextArea
@@ -116,11 +97,7 @@ const AddCommment: React.FC<Props> = ({ id, isComment, onReply }) => {
 
 					{error && <StyledError>{error}</StyledError>}
 
-					<SubmitButton
-						isComment={isComment}
-						type="submit"
-						disabled={isSubmitting}
-					>
+					<SubmitButton type="submit" disabled={isSubmitting}>
 						Submit
 					</SubmitButton>
 				</CommentForm>
@@ -129,4 +106,4 @@ const AddCommment: React.FC<Props> = ({ id, isComment, onReply }) => {
 	)
 }
 
-export default AddCommment
+export default EditCommment

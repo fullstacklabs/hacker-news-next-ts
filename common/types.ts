@@ -42,11 +42,9 @@ export interface News {
 	by: string
 	id: number
 	kids: number[]
-	score: number
 	title: string
 	url: string
 	type: string
-	descendants: number
 	userId: number
 	text?: string
 	likes: Like[]
@@ -57,7 +55,6 @@ export interface NewsSubmit
 	extends Omit<
 		News,
 		| "kids"
-		| "score"
 		| "time"
 		| "type"
 		| "descendants"
@@ -76,6 +73,7 @@ export interface Comment {
 	parent: number
 	text: string
 	creationDate: string
+	userId: number
 }
 
 export interface Login {

@@ -4,6 +4,7 @@ import AddComment from "../../components/AddComment"
 import Comments from "../../components/Comments"
 import Story from "../../components/Story"
 import { News as NewsType } from "../../common/types"
+import { useAPI } from "../../common/util"
 
 interface Props {
 	id: number
@@ -19,13 +20,17 @@ const NewsPage: React.FC<Props> = ({ id, newsPage, error }) => {
 	const [story, setStory] = useState(newsPage)
 	const [isValid, setIsValid] = useState(true)
 	const [clientError, setClientError] = useState<null | string>(null)
+	const { callAPI } = useAPI()
 
 	const onReply = useCallback(() => setIsValid(false), [])
 
+	const onCommentHandler = useCallback(() => {
+		setIsValid(false)
+	}, [])
+
 	useEffect(() => {
 		if (!isValid) {
-			fetch(`http://localhost:3001/news/${id}`)
-				.then((res) => res.json())
+			callAPI(`/news/${id}`)
 				.then((json) => {
 					setStory(json)
 					setIsValid(true)
@@ -44,7 +49,7 @@ const NewsPage: React.FC<Props> = ({ id, newsPage, error }) => {
 		<React.Fragment>
 			<Story news={story} />
 			<AddComment id={id} onReply={onReply} />
-			<Comments kids={story.kids} />
+			<Comments onComment={onCommentHandler} kids={story.kids} />
 		</React.Fragment>
 	)
 }
