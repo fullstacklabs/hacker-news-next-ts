@@ -92,6 +92,22 @@ const Comment: React.FC<Props> = ({ id, onCommentChange }) => {
 		}
 	}, [])
 
+	const likeToggleHandler = useCallback(() => {
+		if (!user || !comment) return
+
+		const likes = [...comment.likes]
+
+		const userLikeIndex = likes.findIndex((like) => like.userId === user.id)
+
+		if (userLikeIndex === -1) likes.push({ userId: user.id })
+		else likes.splice(userLikeIndex, 1)
+
+		callAPI(`/comments/${id}`, {
+			method: "PATCH",
+			body: JSON.stringify({ likes }),
+		}).then((json) => setComment(json))
+	}, [user, comment])
+
 	useEffect(() => {
 		callAPI(`/comments/${id}`).then((json) => setComment(json))
 	}, [id])
@@ -136,7 +152,7 @@ const Comment: React.FC<Props> = ({ id, onCommentChange }) => {
 	return (
 		<StyledComment>
 			<Header>
-				<UpVote />
+				<UpVote onClick={likeToggleHandler} />
 				{header}
 			</Header>
 			<div style={{ display: !isExpanded ? "none" : "block" }}>

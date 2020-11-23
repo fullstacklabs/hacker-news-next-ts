@@ -60,6 +60,7 @@ const AddCommment: React.FC<Props> = ({ id, isComment, onReply }) => {
 			onSubmit={async (values, { setSubmitting, resetForm }) => {
 				const commentValues = {
 					...values,
+					likes: [],
 					kids: [],
 					by: user.name,
 					userId: user.id,
