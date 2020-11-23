@@ -5,6 +5,7 @@ import { UserContext } from "../../common/UserContext"
 import { News } from "../../common/types"
 import { mapTime, useAPI } from "../../common/util"
 import UpVote from "../../components/UpVote"
+import { StyledError } from "../UI"
 
 interface Props {
 	news: News
@@ -43,6 +44,13 @@ const Domain = styled.div`
 	}
 `
 
+const Delete = styled.div`
+	color: red;
+	cursor: pointer;
+	margin: 0 5px;
+	font-size: 0.7rem;
+`
+
 const Details = styled.div`
 	display: flex;
 	align-items: baseline;
@@ -58,7 +66,7 @@ const Details = styled.div`
 const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
 	const [news, setNews] = useState(propsNews)
 	const { user } = useContext(UserContext)
-	const { callAPI } = useAPI()
+	const { loading, error, callAPI } = useAPI()
 	const { title, url, by, creationDate, likes, kids, id, userId } = news
 
 	const likeToggleHandler = useCallback(() => {
@@ -74,10 +82,17 @@ const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
 		callAPI(`/news/${id}`, {
 			method: "PATCH",
 			body: JSON.stringify({ likes }),
-		})
-			.then((json) => setNews(json))
-			.catch((error) => console.error(error))
+		}).then((json) => setNews(json))
 	}, [user, news])
+
+	const deleteHandler = useCallback(() => {
+		if (!user) return
+
+		if (confirm("Are you sure you want to delete?"))
+			callAPI(`/news/${id}`, { method: "DELETE" }).then(() =>
+				location.replace("/")
+			)
+	}, [user])
 
 	useEffect(() => {
 		setNews(propsNews)
@@ -97,6 +112,10 @@ const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
 		}
 	}
 
+	if (error) return <StyledError>{error}</StyledError>
+
+	if (loading) return <p>Loading...</p>
+
 	return (
 		<StyledNews>
 			<Header>
@@ -107,6 +126,9 @@ const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
 					<Domain>
 						(<a href={url}>{hostname}</a>)
 					</Domain>
+				)}
+				{user && user.id === userId && (
+					<Delete onClick={deleteHandler}>delete</Delete>
 				)}
 			</Header>
 			<Details>
