@@ -70,6 +70,7 @@ export interface Comment {
 	deleted: boolean | null
 	id: number
 	kids?: number[]
+	likes: Like[]
 	parent: number
 	text: string
 	creationDate: string
