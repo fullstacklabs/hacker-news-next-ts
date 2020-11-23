@@ -1,15 +1,23 @@
 import React, { useState, useEffect, useContext, useCallback } from "react"
 import Link from "next/link"
 import styled from "styled-components"
+import { Formik } from "formik"
 import { UserContext } from "../../common/UserContext"
 import { News } from "../../common/types"
 import { mapTime, useAPI } from "../../common/util"
 import UpVote from "../../components/UpVote"
-import { StyledError } from "../UI"
+import { StyledButton, StyledError } from "../UI"
+import Input from "../../components/UI/input"
 
 interface Props {
 	news: News
 	rank?: number
+}
+
+type FormErrors = {
+	title?: string
+	url?: string
+	text?: string
 }
 
 const StyledNews = styled.div`
@@ -19,6 +27,10 @@ const StyledNews = styled.div`
 const Header = styled.div`
 	display: flex;
 	align-items: baseline;
+`
+
+const StyledForm = styled.form`
+	padding: 30px;
 `
 
 const Title = styled.h1`
@@ -51,6 +63,12 @@ const Delete = styled.div`
 	font-size: 0.7rem;
 `
 
+const StartEditing = styled.div`
+	cursor: pointer;
+	margin: 0 5px;
+	font-size: 0.7rem;
+`
+
 const Details = styled.div`
 	display: flex;
 	align-items: baseline;
@@ -66,8 +84,9 @@ const Details = styled.div`
 const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
 	const [news, setNews] = useState(propsNews)
 	const { user } = useContext(UserContext)
+	const [isEditing, setIsEditing] = useState(false)
 	const { loading, error, callAPI } = useAPI()
-	const { title, url, by, creationDate, likes, kids, id, userId } = news
+	const { title, url, text, by, creationDate, likes, kids, id, userId } = news
 
 	const likeToggleHandler = useCallback(() => {
 		if (!user) return
@@ -94,6 +113,8 @@ const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
 			)
 	}, [user])
 
+	const editClickHandler = () => setIsEditing(!isEditing)
+
 	useEffect(() => {
 		setNews(propsNews)
 	}, [propsNews])
@@ -116,36 +137,133 @@ const Story: React.FC<Props> = ({ news: propsNews, rank }) => {
 
 	if (loading) return <p>Loading...</p>
 
-	return (
-		<StyledNews>
-			<Header>
-				{rank && <Title>{rank}.</Title>}
-				<UpVote onClick={likeToggleHandler} />
-				<Title>{titleLink}</Title>
-				{url && (
-					<Domain>
-						(<a href={url}>{hostname}</a>)
-					</Domain>
-				)}
-				{user && user.id === userId && (
-					<Delete onClick={deleteHandler}>delete</Delete>
-				)}
-			</Header>
-			<Details>
-				<Link href={`/news/${id}`}>
-					<a>{likes.length} points</a>
-				</Link>
-				&nbsp;| by&nbsp;
-				<Link href={`/user/${userId}`}>
-					<a>{by}</a>
-				</Link>
-				&nbsp;| {creationDate && mapTime(creationDate)} |&nbsp;
-				<Link href={`/news/${id}`}>
-					<a>{kids.length} comments</a>
-				</Link>
-			</Details>
-		</StyledNews>
-	)
+	if (!isEditing)
+		return (
+			<StyledNews>
+				<Header>
+					{rank && <Title>{rank}.</Title>}
+					<UpVote onClick={likeToggleHandler} />
+					<Title>{titleLink}</Title>
+					{url && (
+						<Domain>
+							(<a href={url}>{hostname}</a>)
+						</Domain>
+					)}
+					{user && user.id === userId && (
+						<>
+							<Delete onClick={deleteHandler}>delete</Delete>
+							<StartEditing onClick={editClickHandler}>Edit</StartEditing>
+						</>
+					)}
+				</Header>
+				<Details>
+					<Link href={`/news/${id}`}>
+						<a>{likes.length} points</a>
+					</Link>
+					&nbsp;| by&nbsp;
+					<Link href={`/user/${userId}`}>
+						<a>{by}</a>
+					</Link>
+					&nbsp;| {creationDate && mapTime(creationDate)} |&nbsp;
+					<Link href={`/news/${id}`}>
+						<a>{kids.length} comments</a>
+					</Link>
+				</Details>
+			</StyledNews>
+		)
+	else
+		return (
+			<>
+				<Formik
+					initialValues={{
+						title,
+						url,
+						text,
+					}}
+					validate={(values) => {
+						const errors: FormErrors = {}
+
+						if (!values.title) errors.title = "Required"
+
+						if (!values.url) errors.url = "Required"
+
+						if (!values.text) errors.text = "Required"
+
+						return errors
+					}}
+					onSubmit={async (values, { setSubmitting, resetForm }) => {
+						const json = await callAPI(`/news/${news.id}`, {
+							method: "PATCH",
+							body: JSON.stringify(values),
+						})
+
+						if (json) {
+							setNews(json)
+							resetForm()
+							setIsEditing(false)
+						}
+
+						setSubmitting(false)
+					}}
+				>
+					{({
+						values,
+						errors,
+						touched,
+						handleChange,
+						handleBlur,
+						handleSubmit,
+						isSubmitting,
+					}) => (
+						<StyledForm onSubmit={handleSubmit}>
+							<Input
+								type="text"
+								name="title"
+								onChange={handleChange}
+								onBlur={handleBlur}
+								value={values.title}
+								placeholder="Title"
+								touched={!!touched.title}
+								error={errors.title}
+							/>
+
+							<Input
+								type="text"
+								name="url"
+								onChange={handleChange}
+								onBlur={handleBlur}
+								value={values.url}
+								placeholder="URL"
+								touched={!!touched.url}
+								error={errors.url}
+							/>
+
+							<Input
+								type="text"
+								name="text"
+								onChange={handleChange}
+								onBlur={handleBlur}
+								value={values.text}
+								placeholder="Text"
+								touched={!!touched.text}
+								error={errors.text}
+							/>
+
+							<StyledButton type="submit" disabled={isSubmitting}>
+								Submit
+							</StyledButton>
+						</StyledForm>
+					)}
+				</Formik>
+
+				<StyledButton
+					onClick={editClickHandler}
+					style={{ marginBottom: "15px" }}
+				>
+					Cancel Edit
+				</StyledButton>
+			</>
+		)
 }
 
 export default React.memo(
